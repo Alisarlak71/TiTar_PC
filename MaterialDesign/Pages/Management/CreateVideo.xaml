@@ -1,0 +1,83 @@
+﻿<Page x:Class="MaterialDesign2.Pages.Management.CreateVideo"
+     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:slv="clr-namespace:DraggableListViewLib;assembly=DraggableListView"
+        xmlns:src="clr-namespace:MaterialDesign"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        FlowDirection="RightToLeft"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"
+       Loaded="CreateVideoLoad"
+        FontFamily="{DynamicResource MaterialDesignFont}"
+        Foreground="White"
+      >
+
+    <Grid>
+        <Border CornerRadius="20" Height="650" Margin="30 20 30 20">
+            <StackPanel Background="#444444">
+                <Grid  Margin="10 15 10 10"  >
+                    <Grid Height="50" VerticalAlignment="Top" HorizontalAlignment="Center">
+                        <Label  Name="Information_label" Foreground="#bff442" Cursor="Hand" Content="تکمیل اطلاعات"  Margin="15,10,0,10" HorizontalAlignment="Left" Width="90"/>
+                        <Label  Name="Upload_label" Foreground="White" Cursor="Hand" Content="بارگذاری ویدئو"  Margin="110,10,0,10" HorizontalAlignment="Left" Width="110"/>
+                    </Grid>
+                    <!--***********************************-->
+                    <StackPanel Opacity="1" Margin="20 60 20 10" >
+                        <Separator></Separator>
+                        <StackPanel  Name="Information_Content" Visibility="Visible">
+                            <StackPanel Orientation="Horizontal" Margin="10">
+                                <Label Foreground="White" Content="فایل :" Margin="5"></Label>
+                                <Button  Name="UploadFile" Click="Upload_File_Click" Width="100" Height="30" Background="#bed841" BorderThickness="0" Margin="10">
+                                    <StackPanel>
+                                        <TextBlock Text="انتخاب فایل"></TextBlock>
+                                    </StackPanel>
+                                </Button>
+                                <Label Name="File_Address" VerticalAlignment="Center" Foreground="White" ></Label>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="10">
+                                <Label Foreground="White" Content="عنوان" Margin="5"></Label>
+                                <TextBox Name="Title" TextAlignment="Center" BorderBrush="White" CaretBrush="#bed841"  Width="200" ></TextBox>
+                                <Label Foreground="White" Content="کانال" Margin="5"></Label>
+                                <ComboBox Name="Channel_Name" BorderBrush="White"   Width="200"></ComboBox>
+                            </StackPanel>
+                            <Label Margin="10" Foreground="White" Content="توضیحات" ></Label>
+                            <TextBox Name="Description" BorderBrush="White" CaretBrush="#bed841"  TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Visible" Foreground="White" Height="80"> </TextBox>
+
+                            <StackPanel Orientation="Horizontal" Margin="10">
+                                <Label Foreground="White" Content="رده سنی" Margin="5"></Label>
+                                <TextBox Name="Age" TextAlignment="Center" BorderBrush="White" CaretBrush="#bed841"  Width="200"></TextBox>
+                                <Label Foreground="White" Content="زبان" Margin="5"></Label>
+                                <TextBox Name="Language" TextAlignment="Center" BorderBrush="White" CaretBrush="#bed841"  Width="200"></TextBox>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="10">
+                                <Label Foreground="White" Content="قیمت" Margin="5"></Label>
+                                <TextBox Name="Price" TextAlignment="Center" BorderBrush="White" CaretBrush="#bed841"  Width="200"></TextBox>
+                                <Label Foreground="White" Content="تگ ها" Margin="5"></Label>
+                                <TextBox Name="Tags" TextAlignment="Center" BorderBrush="White" CaretBrush="#bed841" Width="200"></TextBox>
+                            </StackPanel>
+                            <Button Content="ثبت و ادامه . . ." Click="Register_Countinue" Width="120" BorderThickness="0" Background="#bed841"  Margin="20"></Button>
+                            
+                        </StackPanel>
+                        <!--**********************************-->
+                    </StackPanel>
+                    <!--***********************************-->
+                    <StackPanel Opacity="1" Margin="20 65 20 10">
+                        <StackPanel Name="Upload_Content" Visibility="Hidden" >
+                            <StackPanel>
+                                <ProgressBar   Width="200" Height="10" Name="UploadProgressBar" Margin="5"/>
+                                <Label VerticalAlignment="Center" HorizontalAlignment="Center" Name="wait_lable"></Label>
+                                <Button Click="Final_Register_Click" Name="Final_Register" Width="100" Background="#bed841" BorderThickness="0" Content="تایید نهایی"/>
+                            </StackPanel>
+
+                        </StackPanel>
+                        <!--**********************************-->
+                    </StackPanel>
+                    <!--***********************************-->
+                </Grid>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Page>

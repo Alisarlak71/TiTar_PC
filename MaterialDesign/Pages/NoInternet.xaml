@@ -1,0 +1,34 @@
+﻿<Page x:Class="MaterialDesign2.Pages.NoInternet"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:slv="clr-namespace:DraggableListViewLib;assembly=DraggableListView"
+        xmlns:metro="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        xmlns:src="clr-namespace:MaterialDesign"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        FlowDirection="RightToLeft"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"
+         FontFamily="../Font/#IRANSans" 
+      Loaded="Page_Loaded"
+      >
+
+
+    <DockPanel  VerticalAlignment="Center" HorizontalAlignment="Center">
+
+        <Border CornerRadius="5" Background="#2e3137" Height="360" Width="360">
+            <Grid Margin="15">
+                <Label HorizontalAlignment="Center" Foreground="White" VerticalAlignment="Center">
+                    اتصال سیستم خود به اینترنت را بررسی کنید
+                </Label>
+                <Button Click="refresh_connection" Background="#bed841" BorderThickness="0" Cursor="Hand" Margin="0,178,0,120">
+                    سعی مجدد
+                </Button>
+            </Grid>
+
+        </Border>
+    </DockPanel>
+</Page>

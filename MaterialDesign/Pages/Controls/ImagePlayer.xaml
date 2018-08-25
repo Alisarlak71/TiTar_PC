@@ -1,0 +1,55 @@
+﻿<metro:MetroWindow x:Class="MaterialDesign2.Pages.Controls.ImagePlayer"
+     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Height="350" Width="525" WindowState="Maximized"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:metro="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:gif="http://wpfanimatedgif.codeplex.com"
+        xmlns:tb="http://www.hardcodet.net/taskbar"
+        Title="تیتار" 
+        Foreground="#bff442"
+        FontFamily="Font/#IRANSans"
+        FontWeight="400"
+        FontStyle="Normal" WindowStartupLocation="CenterScreen"
+        xmlns:ac="clr-namespace:AdornedControl;assembly=AdornedControl"
+        xmlns:local="clr-namespace:MaterialDesign2.Pages"
+        TitleForeground="{DynamicResource MaterialDesignPaper}"
+        WindowCloseButtonStyle="{DynamicResource MetroWindowCloseButtonStyle}"
+        WindowMaxButtonStyle="{DynamicResource MetroWindowCloseButtonStyle}"
+        WindowMinButtonStyle="{DynamicResource MetroWindowCloseButtonStyle}"
+        WindowTitleBrush="Black"
+        BorderBrush="#bff442"
+        Background="Black"
+         Loaded="MetroWindow_Loaded"           
+                   >
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="booleanToVisibilityConverter"/>
+        <Style x:Key="MetroWindowCloseButtonStyle"
+       TargetType="{x:Type Button}"
+       BasedOn="{StaticResource MetroWindowButtonStyle}">
+            <Setter Property="Foreground" Value="White"></Setter>
+        </Style>
+    </Window.Resources>
+
+
+    <Window.InputBindings>
+        <KeyBinding Key="F" Command="{Binding FullscreenCommand}"/>
+        <KeyBinding Key="O" Command="{Binding OpenCommand}"/>
+        <KeyBinding Key="X" Command="{Binding ExitCommand}"/>
+        <KeyBinding Key="F1" Command="{Binding AboutCommand}"/>
+    </Window.InputBindings>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="1" Name="grid1">
+            <ProgressBar Width="200" Height="20" HorizontalAlignment="Center" VerticalAlignment="Center"
+                         Background="Black" Foreground="#bff442" BorderBrush="#bff442" BorderThickness="2"
+                         IsIndeterminate="True"
+                         Visibility="{Binding IsLoading,Converter={StaticResource booleanToVisibilityConverter}}"/>
+        </Grid>
+    </Grid>
+</metro:MetroWindow>
