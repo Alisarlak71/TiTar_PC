@@ -142,6 +142,72 @@ namespace MaterialDesign2.Classes
             }
             return 1;
         }
+        public int unfollow_user(string targetid, string userid)
+        {
+            Follow_user empObj = new Follow_user();
+            empObj.target_id = targetid;
+            empObj.type = "user";
+            empObj.user_id = userid;
+            // Convert Employee object to JOSN string format   
+            string jsonData = JsonConvert.SerializeObject(empObj);
+            try
+            {
+
+                string pathToFile = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location) + "\\envfile.env";
+                Dictionary<string, string> variables = DotEnvFile.DotEnvFile.LoadFile(pathToFile);
+                string url = variables["BaseUrl"] + "unfollow";
+
+                using (HttpClient client = new HttpClient())
+                {
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));//ACCEPT header
+
+                    HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, url);
+                    request.Content = new StringContent(jsonData,
+                                                        Encoding.UTF8,
+                                                        "application/json");
+                    request.Version = HttpVersion.Version10;
+                    using (HttpResponseMessage response = client.SendAsync(request).Result)
+                    {
+                        using (HttpContent content = response.Content)
+                        {
+                            string mycontent = content.ReadAsStringAsync().Result;
+                            string data = string.Empty;
+                            {
+                                data = mycontent;
+                                if (data != "")
+                                {
+                                    JToken token = JToken.Parse(data);
+
+                                    if (token["error"].ToString() == "False")
+                                    {
+                                        return 0;
+
+                                    }
+                                    else
+                                    {
+                                        return -1;
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                //if (number_of_try < 4)
+                //{
+                //    number_of_try += 1;
+                //    follow_user(targetid, userid);
+                //}
+                //else
+                //{
+                return 1;
+                //}
+            }
+            return 1;
+        }
 
         public List<Content> get_user_contents(string user_id)
         {
@@ -215,5 +281,75 @@ namespace MaterialDesign2.Classes
 
         }
 
+        public class Check_Follow
+        {
+            public string user_id;
+            public string my_id;
+        }
+
+        public int check_follow(string myid, string userid)
+        {
+            Check_Follow empObj = new Check_Follow();
+            empObj.user_id = userid;
+            empObj.my_id = myid;
+            // Convert Employee object to JOSN string format   
+            string jsonData = JsonConvert.SerializeObject(empObj);
+            try
+            {
+
+
+                using (HttpClient client = new HttpClient())
+                {
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));//ACCEPT header
+                    string pathToFile = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location) + "\\envfile.env";
+                    Dictionary<string, string> variables = DotEnvFile.DotEnvFile.LoadFile(pathToFile);
+                    string url = variables["BaseUrl"] + "check_follow";
+                    HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, url);
+                    request.Content = new StringContent(jsonData,
+                                                        Encoding.UTF8,
+                                                        "application/json");
+                    request.Version = HttpVersion.Version10;
+                    using (HttpResponseMessage response = client.SendAsync(request).Result)
+                    {
+                        using (HttpContent content = response.Content)
+                        {
+                            string mycontent = content.ReadAsStringAsync().Result;
+                            string data = string.Empty;
+                            {
+                                data = mycontent;
+                                if (data != "")
+                                {
+                                    JToken token = JToken.Parse(data);
+
+                                    if (token["result"].ToString() == "False")
+                                    {
+                                        return 0;
+
+                                    }
+                                    else
+                                    {
+                                        return 1;
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                //if (number_of_try < 4)
+                //{
+                //    number_of_try += 1;
+                //    follow_channel(targetid, userid);
+                //}
+                //else
+                //{
+                return -1;
+                //}
+            }
+            return -1;
+        }
     }
 }

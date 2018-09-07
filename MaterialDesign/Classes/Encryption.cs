@@ -111,12 +111,12 @@ namespace MaterialDesign2.Classes
         public string decrypted_username;
         public registerysetting()
         {
-            encrypted_password="";
+            encrypted_password = "";
             decrypted_password = "";
             encrypted_username = "";
             decrypted_username = "";
         }
-        public void write_to_registery(string username , string password)
+        public void write_to_registery(string username, string password)
         {
             /// encryption password to registery
             /// 
@@ -130,8 +130,8 @@ namespace MaterialDesign2.Classes
             passRegistryKey.Close();
 
             /// encryption username to registery
-            encrypted_username = Encryption.Encrypt(username , key);
-            Microsoft.Win32.RegistryKey userRegistryKey = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Titar_TV",true);
+            encrypted_username = Encryption.Encrypt(username, key);
+            Microsoft.Win32.RegistryKey userRegistryKey = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Titar_TV", true);
             userRegistryKey.SetValue("uname", encrypted_username);
             userRegistryKey.Close();
         }
@@ -163,10 +163,14 @@ namespace MaterialDesign2.Classes
         }
         public void delete_from_registery()
         {
-            Microsoft.Win32.RegistryKey passRegistryKey = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Titar_TV",true);
+            Microsoft.Win32.RegistryKey passRegistryKey = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Titar_TV", true);
             passRegistryKey.DeleteValue("pass");
             passRegistryKey.DeleteValue("uname");
         }
+        /// <summary>
+        ///  for openning in browser
+        /// </summary>
+       
 
     }
 }

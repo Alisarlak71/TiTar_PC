@@ -8,10 +8,10 @@ using System.Windows;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Titar")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Store for VR product")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("MaterialDesign")]
+[assembly: AssemblyCompany("Ateriad")]
+[assembly: AssemblyProduct("Titar")]
 [assembly: AssemblyCopyright("Copyright ©  2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

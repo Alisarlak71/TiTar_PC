@@ -43,11 +43,33 @@ namespace MaterialDesign
 
         public MaterialDesign2.Pages.Management.CreateVideo CreateVideoPage=new MaterialDesign2.Pages.Management.CreateVideo();
 
+        public string CustomerCode { get; set; }
+
         protected override void OnStartup(StartupEventArgs e)
         {
-        
-        
-    }
+            if(e.Args.Length==1)
+            CustomerCode = e.Args[0].ToString();
+           // base.OnStartup(e);
+            MessageBox.Show(CustomerCode);
+        }
+        public void register_app_Location()
+        {
+            string path = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location) + @"\Titar.exe";
+            Microsoft.Win32.RegistryKey Software = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE");
+            Microsoft.Win32.RegistryKey Classes = Software.OpenSubKey("Classes");
+
+            Microsoft.Win32.RegistryKey Titar = Classes.CreateSubKey("Titar");
+            Titar.SetValue("", "URL:Custom Protocol");
+            Titar.SetValue("URL Protocol", "");
+
+            Microsoft.Win32.RegistryKey DefaultIcon = Titar.CreateSubKey("DefaultIcon");
+            DefaultIcon.SetValue("", "\"" + path +", 0\"");
+            Microsoft.Win32.RegistryKey shell = Titar.CreateSubKey("shell");
+            Microsoft.Win32.RegistryKey open = shell.CreateSubKey("open");
+            Microsoft.Win32.RegistryKey command = open.CreateSubKey("command");
+            command.SetValue("", "\""+path+"\""+" \"%1\"");
+            Titar.Close();
+        }
     }
     
 }

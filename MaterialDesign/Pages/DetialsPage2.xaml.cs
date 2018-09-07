@@ -139,6 +139,8 @@ namespace MaterialDesign2.Pages
                                      MaterialDesign2.Classes.Users user = new MaterialDesign2.Classes.Users();
                                      List<MaterialDesign2.Classes.Content> User_contents = new List<MaterialDesign2.Classes.Content>();
                                      User_contents = user.get_user_contents(user_id);
+                                     int followed_int = user.check_follow((MaterialDesign.App.Current as MaterialDesign.App).User.id,User_contents[0].author_id);
+
                                      Dispatcher.BeginInvoke(
                                    (Action)(() =>
                                    {
@@ -148,30 +150,37 @@ namespace MaterialDesign2.Pages
                                                Title.Foreground = Brushes.White;
                                                Title.Margin = new Thickness(5);
 
-                                               if (User_contents!=null)
-                                               {
+                                       if (User_contents != null)
+                                       {
 
-                                                   Detials_Content.Children.Clear();
-                                                   Addtolist2(User_contents);
-                                                   Title.Text = User_contents[0].author["name"].ToString();
-                                                   Detials_Content.Children.Add(Title);
-                                                   var color = new BrushConverter();
-                                                   follow.Width = 80;
-                                                   follow.Height = 30;
-                                                   follow.Background = (Brush)color.ConvertFrom("#bff442");
-                                                   follow.Foreground = Brushes.Black;
-                                                   follow.MouseDown += follow_channel;
-                                                   follow.Content = "دنبال کردن";
-                                                   follow.Padding = new Thickness(5);
-                                                   follow.id = user_id;
-                                                   Detials_Content.Children.Add(follow);
-                                                  
-                                               }
-                                               else
-                                               {
-                                                   Title.Text = "هنوز محتوایی توسط این کاربر ثبت نشده";
-                                                   Detials_Content.Children.Add(Title);
-                                               }
+                                           Detials_Content.Children.Clear();
+                                           Addtolist2(User_contents);
+                                           Title.Text = User_contents[0].author["name"].ToString();
+                                           Detials_Content.Children.Add(Title);
+                                           var color = new BrushConverter();
+                                           follow.Width = 80;
+                                           follow.Height = 30;
+                                           follow.Background = (Brush)color.ConvertFrom("#bff442");
+                                           follow.Foreground = Brushes.Black;
+                                           follow.MouseDown += follow_user;
+                                           follow.Content = "دنبال کردن";
+                                           if (followed_int == 1)
+                                           {
+                                               follow.Background = (Brush)color.ConvertFrom("#444444");
+                                               follow.Foreground = Brushes.White;
+                                               followed = true;
+                                               follow.Content = "لغو دنبال کردن";
+                                           }
+                                           follow.Padding = new Thickness(5);
+                                           follow.id = user_id;
+                                           Detials_Content.Children.Add(follow);
+
+                                       }
+                                       else
+                                       {
+                                           Title.Text = "هنوز محتوایی توسط این کاربر ثبت نشده";
+                                           Detials_Content.Children.Add(Title);
+                                       }
                                                
                                         
                                    }));
@@ -539,8 +548,8 @@ namespace MaterialDesign2.Pages
                 Thread t = new Thread(
                             o =>
                             {
-                                Classes.Channels channel = new Classes.Channels();
-                                int i = channel.unfollow_channel(channel_id, (MaterialDesign.App.Current as MaterialDesign.App).User.id);
+                                Classes.Users user = new Classes.Users();
+                                int i = user.unfollow_user(user_id, (MaterialDesign.App.Current as MaterialDesign.App).User.id);
                                 Dispatcher.BeginInvoke(
                                   (Action)(() =>
                                   {

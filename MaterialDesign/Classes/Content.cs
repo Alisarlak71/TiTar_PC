@@ -70,11 +70,7 @@ namespace MaterialDesign2.Classes
         }
     }
 
-    public class RootObject
-    {
-        public bool error { get; set; }
-        public List<Content> contents { get; set; }
-    }
+  
 
     public class ReciveContent
     {
@@ -408,6 +404,8 @@ namespace MaterialDesign2.Classes
             public string description { get; set; }
             public string age { get; set; }
             public string tags { get; set; }
+            public string category_id { get; set; }
+
             public string price { get; set; }
             public string extension { get; set; }
             public string size { get; set; }
@@ -429,6 +427,7 @@ namespace MaterialDesign2.Classes
                 empObj.extension = extension;
                 empObj.size = size;
                 empObj.length = length;
+                empObj.category_id = "1";
                 // Convert Employee object to JOSN string format   
                 string jsonData = JsonConvert.SerializeObject(empObj);
                 try

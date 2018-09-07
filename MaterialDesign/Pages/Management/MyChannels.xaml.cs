@@ -79,7 +79,7 @@ namespace MaterialDesign2.Pages.Management
                 //}
                 //catch (Exception)
                 //{
-                    bimg = new ImageBrush(new BitmapImage(new Uri("http://titar.ir/thumbnails/channels/" + channel[index].thumbnail)));
+                    bimg = new ImageBrush(new BitmapImage(new Uri("http://titar.ir/thumbnail/" + channel[index].thumbnail)));
                 //}
                 img.Source = bimg.ImageSource;
                 img.Width = 120;
