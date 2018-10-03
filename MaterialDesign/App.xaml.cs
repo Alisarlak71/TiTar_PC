@@ -50,7 +50,7 @@ namespace MaterialDesign
             if(e.Args.Length==1)
             CustomerCode = e.Args[0].ToString();
            // base.OnStartup(e);
-            MessageBox.Show(CustomerCode);
+            //MessageBox.Show(CustomerCode);
         }
         public void register_app_Location()
         {

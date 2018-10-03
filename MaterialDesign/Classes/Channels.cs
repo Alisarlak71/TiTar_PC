@@ -54,6 +54,9 @@ namespace MaterialDesign2.Classes
                         using (HttpContent content = response.Content)
                         {
                             string mycontent = content.ReadAsStringAsync().Result;
+                            int index = mycontent.LastIndexOf("<link");
+                            if (index > 0)
+                                mycontent = mycontent.Substring(0, index);
                             string data = string.Empty;
                             {
                                 data = mycontent;
@@ -257,6 +260,9 @@ namespace MaterialDesign2.Classes
                         using (HttpContent content = response.Content)
                         {
                             string mycontent = content.ReadAsStringAsync().Result;
+                            int index = mycontent.LastIndexOf("<link");
+                            if (index > 0)
+                                mycontent = mycontent.Substring(0, index);
                             string data = string.Empty;
                             {
                                 data = mycontent;
@@ -366,7 +372,10 @@ namespace MaterialDesign2.Classes
                     using (HttpContent content = response.Content)
                     {
                         string mycontent = content.ReadAsStringAsync().Result;
-                        string data = string.Empty;
+                    int index = mycontent.LastIndexOf("<link");
+                    if (index > 0)
+                        mycontent = mycontent.Substring(0, index);
+                    string data = string.Empty;
                         {
                             data = mycontent;
                             if (data != "")

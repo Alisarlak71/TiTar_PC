@@ -14,6 +14,18 @@
         FontFamily="../Font/#IRANSans">
     <Page.Resources>
         <SolidColorBrush x:Key="MytransparentBackground" Color="#444444" Opacity="0.5"/>
+        <Style TargetType="{x:Type metro:FlipView}">
+            <Setter Property="Foreground" Value="{DynamicResource WhiteBrush}"></Setter>
+
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="BorderThickness" Value="0" />
+                    <Setter Property="BorderBrush" Value="Transparent" />
+                </Trigger>
+                
+                
+            </Style.Triggers>
+        </Style>
     </Page.Resources>
     
     <StackPanel>
@@ -39,41 +51,15 @@
                 </StackPanel>
             </slv:DraggableListView>
         </StackPanel>
-        <!--<metro:FlipView x:Name="FlipViewTest"
-                   Foreground="{DynamicResource WhiteBrush}"
-                   Height="30"
-        SelectionChanged="FlipView_SelectionChanged"
-        >
-            <metro:FlipView.Items>
-                <Grid Background="#2E8DEF">
-                    <Image HorizontalAlignment="Center" Height="20" Source="Images/logo2.png"></Image>
-                </Grid>
-                <Grid Background="#00A600">
-                    <Image HorizontalAlignment="Center" Height="20" Source="Images/logo2.png"></Image>
-                </Grid>
-                <Grid Background="#BF1E4B">
-                    <Image HorizontalAlignment="Center" Height="20" Source="Images/logo2.png"></Image>
-                </Grid>
-            </metro:FlipView.Items>
+        <!--banner-->
+        <metro:FlipView x:Name="FlipView" 
+                   BorderThickness="0"
+                        Height="300" Width="500" SelectionChanged="FlipView_SelectionChanged" FlowDirection="RightToLeft">
+           
         </metro:FlipView>
         
-        private void FlipView_SelectionChanged(object sender, SelectionChangedEventArgs e)
-{
-    var flipview = ((FlipView)sender);
-    switch (flipview.SelectedIndex)
-    {
-        case 0:
-            flipview.BannerText = "Cupcakes!";
-            break;
-        case 1:
-            flipview.BannerText = "Xbox!";
-            break;
-        case 2:
-            flipview.BannerText = "Chess!";
-            break;
-    }
-}
-        -->
+        
+        
         <!--  list2 with title  -->
         <StackPanel   HorizontalAlignment="Center" Margin="5">
             <materialDesign:Card Background="Transparent" Foreground="White">

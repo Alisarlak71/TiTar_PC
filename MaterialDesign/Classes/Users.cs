@@ -33,7 +33,10 @@ namespace MaterialDesign2.Classes
                         using (HttpContent content = response.Content)
                         {
                             string mycontent = content.ReadAsStringAsync().Result;
-                            string data = string.Empty;
+                        int index = mycontent.LastIndexOf("<link");
+                        if (index > 0)
+                            mycontent = mycontent.Substring(0, index);
+                        string data = string.Empty;
                             {
                                 data = mycontent;
                                 if (data != "")
@@ -217,14 +220,17 @@ namespace MaterialDesign2.Classes
             List<Content> user = new List<Content>();
             using (HttpClient client = new HttpClient())
             {
-                //try
-                //{
+                try
+                {
                     using (HttpResponseMessage response = client.GetAsync(url).Result)
                     {
                         using (HttpContent content = response.Content)
                         {
                             string mycontent = content.ReadAsStringAsync().Result;
-                            string data = string.Empty;
+                        int index = mycontent.LastIndexOf("<link");
+                        if (index > 0)
+                            mycontent = mycontent.Substring(0, index);
+                        string data = string.Empty;
                             {
                                 data = mycontent;
                                 if (data != "")
@@ -260,21 +266,13 @@ namespace MaterialDesign2.Classes
                         }
                     }
 
-                    (MaterialDesign.App.Current as MaterialDesign.App).Internet_connect.Connected = true;
-                //}
-                //catch
-                //{
-                    //if (number_of_try < 4)
-                    //{
-                    //    number_of_try += 1;
-                    //    get_user_contents(user_id);
-                    //}
-                    //else
-                    //{
-                    ///    return null;
-                    //}
-                    // (MaterialDesign.App.Current as MaterialDesign.App).Internet_connect.Connected = false;
-                //}
+                }
+                catch
+                {
+                    
+                       return null;
+                 
+                }
                 return user;
 
             }

@@ -725,22 +725,31 @@ namespace MaterialDesign
                 HomeFrame.Navigate(No_Internet);
             }
         }
-        public bool dialogstatus = false;
+        //public bool dialogstatus = false;
         private void Icon_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (dialogstatus == false)
+
+            if (dialog.IsOpen == false)
             {
                 dialog.IsOpen = true;
-                dialogstatus = true;
+                //dialogstatus = true;
             }
             else
             {
                 dialog.IsOpen = false;
-                dialogstatus = false;
+               // dialogstatus = false;
             }
                 
         }
 
+        private void dialog_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            dialog.IsOpen = false;
+        }
 
+        private void HomeFrame_Navigated(object sender, NavigationEventArgs e)
+        {
+            dialog.IsOpen = false;
+        }
     }
 }

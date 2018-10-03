@@ -56,7 +56,7 @@ namespace MaterialDesign2.Pages.Management
             int index=0;
             channel_holder.HorizontalAlignment = HorizontalAlignment.Center;
             channel_holder.VerticalAlignment = VerticalAlignment.Top;
-
+            if(channel!=null)
             while (index < channel.Count)
             {
                 StackPanel items = new StackPanel();

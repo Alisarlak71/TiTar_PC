@@ -83,15 +83,18 @@ namespace MaterialDesign2.Pages.Management
                                  Dispatcher.BeginInvoke(
                                    (Action)(() =>
                                    {
-                                       
-                                               Channel_Name.Items.Clear();
-                                               int i=0;
-                                               while(i<content_channel.Count){
-                                                   Channel_Name.Items.Clear();
-                                                   Channel_Name.Items.Add(content_channel[i].name);
-                                                   i++;
-                                               }
-                                           
+
+                                       Channel_Name.Items.Clear();
+                                       int i = 0;
+                                       if (content_channel != null)
+                                       {
+                                           while (i < content_channel.Count)
+                                           {
+                                               Channel_Name.Items.Add(content_channel[i].name);
+                                               i++;
+                                           }
+                                       }
+
 
                                    }));
                              });
@@ -102,24 +105,38 @@ namespace MaterialDesign2.Pages.Management
         }
         private void Register_Countinue(object sender, RoutedEventArgs e)
         {
+            (MaterialDesign.App.Current.MainWindow as MaterialDesign.MainWindow).scrollbar1.ScrollToTop();
 
 
             (MaterialDesign.App.Current.MainWindow as MaterialDesign.MainWindow).StartStopWait();
-             
-            string channelname = Channel_Name.SelectedItem.ToString();
-
+            string channelname="";
             MaterialDesign2.Classes.Channel channel = new Classes.Channel();
-            int index = 0;
-            while(index<content_channel.Count)
+
+            if (Channel_Name.Items.Count!=0)
             {
-                if (content_channel[index].name==channelname)
+                try
                 {
-                    channel=content_channel[index];
+                    channelname = Channel_Name.SelectedItem.ToString();
                 }
-                index++;
+                catch
+                {
+                    channelname = "";
+                }
+                int index = 0;
+
+                while (index < content_channel.Count)
+                {
+                    if (content_channel[index].name == channelname)
+                    {
+                        channel = content_channel[index];
+                    }
+                    index++;
+                }
             }
+
             
-            if (Title.Text != "" && Description.Text != "" && Age.Text != "" && Language.Text != "" && Tags.Text != "" && Price.Text != "" && Format!=""&& Size!=""&&Duration!="")
+            
+            if (channelname!= "" && Title.Text != "" && Description.Text != "" && Age.Text != "" && Language.Text != "" && Tags.Text != "" && Price.Text != "" && Format!=""&& Size!=""&&Duration!="")
             {
                 string title = Title.Text;
                 string descrpition = Description.Text;

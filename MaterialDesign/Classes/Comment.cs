@@ -104,8 +104,8 @@ namespace MaterialDesign2.Classes
 
             using (HttpClient client = new HttpClient())
             {
-                try
-                {
+                //try
+                //{
                     string pathToFile = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location) + "\\envfile.env";
                     Dictionary<string, string> variables = DotEnvFile.DotEnvFile.LoadFile(pathToFile);
                     string url = variables["BaseUrl"] + "comments/" + id;
@@ -115,6 +115,9 @@ namespace MaterialDesign2.Classes
                         using (HttpContent content = response.Content)
                         {
                             string mycontent = content.ReadAsStringAsync().Result;
+                            int index = mycontent.LastIndexOf("<link");
+                            if (index > 0)
+                                mycontent = mycontent.Substring(0, index);
                             string data = string.Empty;
                             {
                                 data = mycontent;
@@ -145,20 +148,20 @@ namespace MaterialDesign2.Classes
                     }
 
                     (MaterialDesign.App.Current as MaterialDesign.App).Internet_connect.Connected = true;
-                }
-                catch
-                {
-                    //if (number_of_try < 4)
-                    //{
-                    //    number_of_try += 1;
-                    //    Get_Comments(id);
-                    //}
-                    //else
-                    //{
-                        return null;
-                   // }
-                    // (MaterialDesign.App.Current as MaterialDesign.App).Internet_connect.Connected = false;
-                }
+                //}
+                //catch
+                //{
+                //    //if (number_of_try < 4)
+                //    //{
+                //    //    number_of_try += 1;
+                //    //    Get_Comments(id);
+                //    //}
+                //    //else
+                //    //{
+                //        return null;
+                //   // }
+                //    // (MaterialDesign.App.Current as MaterialDesign.App).Internet_connect.Connected = false;
+                //}
             }
         
 

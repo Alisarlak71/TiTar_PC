@@ -294,9 +294,9 @@
                     <Image HorizontalAlignment="Center" Height="30" Source="Images/logo2.png"></Image>
                 </DockPanel>
                 <ScrollViewer Name="scrollbar1" CanContentScroll="False" Background="Transparent" Grid.Row="1" IsDeferredScrollingEnabled="True" HorizontalScrollBarVisibility="Disabled" >
-                    <Frame Name="HomeFrame" NavigationUIVisibility="Hidden"/>
+                    <Frame PreviewMouseDown="dialog_PreviewMouseDown"  Navigated="HomeFrame_Navigated" Name="HomeFrame" NavigationUIVisibility="Hidden"/>
                 </ScrollViewer>
-                <metro:Flyout Background="Black" TitleVisibility="Hidden" CloseButtonVisibility="Hidden" Name="dialog" Grid.Row="1"  Foreground="White" Header=""  Position="Left" Width="210">
+                <metro:Flyout IsPinned="False"  Background="Black" TitleVisibility="Hidden" CloseButtonVisibility="Hidden" Name="dialog" Grid.Row="1"  Foreground="White" Header=""  Position="Left" Width="210">
                     <!-- Your custom content here -->
                     <TreeView Background="Transparent"  Grid.Row="1" x:Name="TreeView" Style="{StaticResource MenuTreeView}" Grid.IsSharedSizeScope="True">
                         <TreeViewItem Tag="Home" >

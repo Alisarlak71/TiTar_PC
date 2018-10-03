@@ -161,6 +161,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Classes\AppGameStuff.cs" />
+    <Compile Include="Classes\Banners.cs" />
     <Compile Include="Classes\Caching.cs" />
     <Compile Include="Classes\Channels.cs" />
     <Compile Include="Classes\Comment.cs" />

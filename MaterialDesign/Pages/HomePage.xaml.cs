@@ -21,6 +21,8 @@ using System.IO;
 using System.Net;
 using System.Threading;
 using MahApps.Metro;
+using System.Windows.Threading;
+
 namespace MaterialDesign1.Pages
 {
     /// <summary>
@@ -35,47 +37,48 @@ namespace MaterialDesign1.Pages
         }
         public void reload()
         {
-            
-          string ctype=(MaterialDesign.App.Current.MainWindow as MaterialDesign.MainWindow).Contetnt_Type;
-                    if ((MaterialDesign.App.Current as MaterialDesign.App).Internet_connect.IsNetworkAvailable() == true)
-                    {
-                        Thread t = new Thread(
-                             o =>
-                             {
-                                 (MaterialDesign.App.Current as MaterialDesign.App).Recive_Content.recive_content("last_video", ctype);
-                                 (MaterialDesign.App.Current as MaterialDesign.App).Recive_Content.recive_content("most_seen", ctype);
-                                 (MaterialDesign.App.Current as MaterialDesign.App).Recive_Content.recive_content("most_love", ctype);
-                                 (MaterialDesign.App.Current as MaterialDesign.App).Recive_Content.recive_content("most_down", ctype);
 
-                                 Dispatcher.BeginInvoke(
-                                   (Action)(() =>
-                                   {
+            string ctype = (MaterialDesign.App.Current.MainWindow as MaterialDesign.MainWindow).Contetnt_Type;
+            if ((MaterialDesign.App.Current as MaterialDesign.App).Internet_connect.IsNetworkAvailable() == true)
+            {
+                Thread t = new Thread(
+                     o =>
+                     {
+                         (MaterialDesign.App.Current as MaterialDesign.App).Recive_Content.recive_content("last_video", ctype);
+                         (MaterialDesign.App.Current as MaterialDesign.App).Recive_Content.recive_content("most_seen", ctype);
+                         (MaterialDesign.App.Current as MaterialDesign.App).Recive_Content.recive_content("most_love", ctype);
+                         (MaterialDesign.App.Current as MaterialDesign.App).Recive_Content.recive_content("most_down", ctype);
 
-                                       (MaterialDesign.App.Current.MainWindow as MaterialDesign.MainWindow).StartStopWait();
-                                       
-                                       List1.Children.Clear();
-                                       List2.Children.Clear();
-                                       List3.Children.Clear();
-                                       List4.Children.Clear();
-                                       Addtolist1();
-                                       Addtolist2();
-                                       Addtolist3();
-                                       Addtolist4(); 
-                                   }));
-                             });
-                        t.Start();
-                        this.ShowsNavigationUI = false;
-                        //
+                         Dispatcher.BeginInvoke(
+                           (Action)(() =>
+                           {
 
-                    }
-                    else
-                    {
-                        (MaterialDesign.App.Current.MainWindow as MaterialDesign.MainWindow).StartStopWait();
-                        MaterialDesign2.Pages.NoInternet No_Internet = new MaterialDesign2.Pages.NoInternet();
-                        (MaterialDesign.App.Current.MainWindow as MaterialDesign.MainWindow).HomeFrame.Navigate(No_Internet);
-                    }
-              
-            
+                               (MaterialDesign.App.Current.MainWindow as MaterialDesign.MainWindow).StartStopWait();
+
+                               List1.Children.Clear();
+                               List2.Children.Clear();
+                               List3.Children.Clear();
+                               List4.Children.Clear();
+                               Addtolist1();
+                               Addtolist2();
+                               Addtolist3();
+                               Addtolist4();
+                               addbanner();
+                           }));
+                     });
+                t.Start();
+                this.ShowsNavigationUI = false;
+                //
+
+            }
+            else
+            {
+                (MaterialDesign.App.Current.MainWindow as MaterialDesign.MainWindow).StartStopWait();
+                MaterialDesign2.Pages.NoInternet No_Internet = new MaterialDesign2.Pages.NoInternet();
+                (MaterialDesign.App.Current.MainWindow as MaterialDesign.MainWindow).HomeFrame.Navigate(No_Internet);
+            }
+
+
         }
         private void load_home(object sender, RoutedEventArgs e)
         {
@@ -91,7 +94,7 @@ namespace MaterialDesign1.Pages
 
         public void Addtolist1()
         {
-            
+
             int index = 0;
             while (index < (MaterialDesign.App.Current as MaterialDesign.App).LasteContent.Count)
             {
@@ -125,7 +128,7 @@ namespace MaterialDesign1.Pages
                 //var color = new BrushConverter();
                 //ss.Foreground = (Brush)color.ConvertFrom("#bff442");
                 //cover.Children.Add(ss);
-                
+
                 CustomButton card1 = new CustomButton();
                 card1.Answer = (MaterialDesign.App.Current as MaterialDesign.App).LasteContent[index].id.ToString();
                 card1.type = (MaterialDesign.App.Current as MaterialDesign.App).LasteContent[index].type.ToString(); ;
@@ -180,7 +183,7 @@ namespace MaterialDesign1.Pages
         }
         public void Addtolist2()
         {
-            
+
             int index = 0;
             while (index < (MaterialDesign.App.Current as MaterialDesign.App).MostSeen.Count)
             {
@@ -270,7 +273,7 @@ namespace MaterialDesign1.Pages
         }
         public void Addtolist3()
         {
-            
+
             int index = 0;
             while (index < (MaterialDesign.App.Current as MaterialDesign.App).MostLove.Count)
             {
@@ -362,7 +365,7 @@ namespace MaterialDesign1.Pages
         }
         public void Addtolist4()
         {
-            
+
             int index = 0;
             while (index < (MaterialDesign.App.Current as MaterialDesign.App).MostDown.Count)
             {
@@ -495,30 +498,30 @@ namespace MaterialDesign1.Pages
                 {
                     elementName = mouseWasDownOn.Answer;
                 }
-                
+
                 (MaterialDesign.App.Current as MaterialDesign.App).Recive_Content.number_of_try = 0;
 
                 if ((MaterialDesign.App.Current as MaterialDesign.App).Internet_connect.IsNetworkAvailable() == true)
                 {
                     if ((MaterialDesign.App.Current as MaterialDesign.App).login_account.Loged_in == true)
                     {
-                       
-                            (MaterialDesign.App.Current.MainWindow as MaterialDesign.MainWindow).StartStopWait();
 
-                            (MaterialDesign.App.Current.MainWindow as MaterialDesign.MainWindow).scrollbar1.ScrollToTop();
+                        (MaterialDesign.App.Current.MainWindow as MaterialDesign.MainWindow).StartStopWait();
 
-                            if (mouseWasDownOn.type == "app" || mouseWasDownOn.type == "game")
-                            {
-                               MaterialDesign2.Pages.AppGamePage details = new MaterialDesign2.Pages.AppGamePage();
-                                details.selected_id = elementName;
-                                this.NavigationService.Navigate(details);
-                            }
-                            else
-                            {
-                                MaterialDesign1.Pages.DetialsPage1 detialspage1 = new MaterialDesign1.Pages.DetialsPage1();
-                                detialspage1.selected_id = elementName;
-                                this.NavigationService.Navigate(detialspage1);
-                            }
+                        (MaterialDesign.App.Current.MainWindow as MaterialDesign.MainWindow).scrollbar1.ScrollToTop();
+
+                        if (mouseWasDownOn.type == "app" || mouseWasDownOn.type == "game")
+                        {
+                            MaterialDesign2.Pages.AppGamePage details = new MaterialDesign2.Pages.AppGamePage();
+                            details.selected_id = elementName;
+                            this.NavigationService.Navigate(details);
+                        }
+                        else
+                        {
+                            MaterialDesign1.Pages.DetialsPage1 detialspage1 = new MaterialDesign1.Pages.DetialsPage1();
+                            detialspage1.selected_id = elementName;
+                            this.NavigationService.Navigate(detialspage1);
+                        }
                     }
                     else
                     {
@@ -529,8 +532,8 @@ namespace MaterialDesign1.Pages
                 else
                 {
 
-                   // (MaterialDesign.App.Current.MainWindow as MaterialDesign.MainWindow).StartStopWait();
-                    
+                    // (MaterialDesign.App.Current.MainWindow as MaterialDesign.MainWindow).StartStopWait();
+
                     MaterialDesign2.Pages.NoInternet Nointernet = new MaterialDesign2.Pages.NoInternet();
                     this.NavigationService.Navigate(Nointernet);
                 }
@@ -540,9 +543,87 @@ namespace MaterialDesign1.Pages
         {
             time = e.Timestamp;
         }
+
+        /// <summary>
+        /// add banner
+        /// </summary>
+
+        public List<string> bannertext= new List<string>();
+        public void addbanner()
+        {
+            MaterialDesign2.Classes.Banners bannercontent = new MaterialDesign2.Classes.Banners();
+            List<MaterialDesign2.Classes.Banners> bannercontent1 = bannercontent.get_banners();
+            if (bannercontent1 != null)
+            {
+                int index = 0;
+                while (index < bannercontent1.Count)
+                {
+                    //Image thumbnail = new Image();
+                    //BitmapImage image = new BitmapImage(new Uri("http://titar.ir/thumbnails/banners/" + bannercontent1[index].thumbnail));
+                    //thumbnail.Source = image;
+
+                    banneritems grid = new banneritems();
+                    ImageBrush bimg = new ImageBrush(new BitmapImage(new Uri("http://titar.ir/thumbnails/banners/" + bannercontent1[index].thumbnail)));
+
+                    grid.Background = bimg;
+                    
+                    grid.link = bannercontent1[index].link;
+                    grid.MouseDown += open_link;
+                    FlipView.Items.Add(grid);
+                    bannertext.Add( bannercontent1[index].title);
+                    index++;
+                }
+                int change = 1;
+
+                DispatcherTimer timer = new DispatcherTimer();
+                timer.Interval = TimeSpan.FromSeconds(3);
+                timer.Tick += (o, a) =>
+                {
+                    // If we'd go out of bounds then reverse
+                    int newIndex = FlipView.SelectedIndex + change;
+                    if (newIndex >= FlipView.Items.Count || newIndex < 0)
+                    {
+                        change *= -1;
+                    }
+
+                    FlipView.SelectedIndex += change;
+                };
+                timer.Start();
+            }
+
+        }
+
+        private void FlipView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var flipview = ((MahApps.Metro.Controls.FlipView)sender);
+            if(bannertext.Count!=0)
+            FlipView.BannerText = bannertext[flipview.SelectedIndex];
+        }
+        private void open_link(object sender, MouseEventArgs e)
+        {
+            string link = "";
         
+                var mouseWasDownOn = sender as banneritems;
+            if (mouseWasDownOn != null)
+            {
+                try { 
+                link = mouseWasDownOn.link;
+               // link = "https://mahapps.com/guides/";
+                System.Diagnostics.Process.Start(link);
+                }
+                catch
+                {
+                     ////sentry
+                }
+            }
+        }
+
+        public class banneritems : Grid
+        { 
+            public string link;
+        }
         //// add a custom property
-          public class CustomButton : Card
+        public class CustomButton : Card
         {
               public string type { set; get; }
               public string test;
@@ -564,5 +645,6 @@ namespace MaterialDesign1.Pages
 
         }
 
+       
     }
 }

@@ -134,6 +134,9 @@ namespace MaterialDesign2.Classes
                         using (HttpContent content = response.Content)
                         {
                             string mycontent = content.ReadAsStringAsync().Result;
+                            int index = mycontent.LastIndexOf("<link");
+                            if (index > 0)
+                                mycontent = mycontent.Substring(0, index);
                             string data = string.Empty;
                             {
                                 data = mycontent;
@@ -201,8 +204,8 @@ namespace MaterialDesign2.Classes
                     string pathToFile = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location) + "\\envfile.env";
                     Dictionary<string, string> variables = DotEnvFile.DotEnvFile.LoadFile(pathToFile);
                     string key = variables["SentryKey"];
-                    string project =variables["SentryProject"] ;
-                    var ravenClient = new RavenClient("https://"+key+"@sentry.io/"+project);
+                    string project = variables["SentryProject"];
+                    var ravenClient = new RavenClient("https://" + key + "@sentry.io/" + project);
                     ravenClient.Capture(new SentryEvent(exception));
                     //if (number_of_try < 4)
                     //{
@@ -232,6 +235,9 @@ namespace MaterialDesign2.Classes
                         using (HttpContent content = response.Content)
                         {
                             string mycontent = content.ReadAsStringAsync().Result;
+                            int index = mycontent.LastIndexOf("<link");
+                            if (index > 0)
+                                mycontent = mycontent.Substring(0, index);
                             string data = string.Empty;
                             {
                                 data = mycontent;
@@ -305,7 +311,10 @@ namespace MaterialDesign2.Classes
                         HttpContent content = response.Content;
                         
                             string mycontent = content.ReadAsStringAsync().Result;
-                            string data = string.Empty;
+                    int index = mycontent.LastIndexOf("<link");
+                    if (index > 0)
+                        mycontent = mycontent.Substring(0, index);
+                    string data = string.Empty;
                             {
                                 data = mycontent;
                                 if (data != "")
@@ -361,7 +370,7 @@ namespace MaterialDesign2.Classes
                                                     temp.answer = comments[i]["answer"].ToString();
                                                     temp.user_id = comments[i]["user_id"].ToString();
                                                     temp.username = tempuser.get_user_info(temp.user_id);
-                                                    classdata.comments.Add(temp) ;
+                                                    classdata.comments.Add(temp);
                                                     i++;
                                                 }
                                             }
@@ -374,12 +383,12 @@ namespace MaterialDesign2.Classes
                 }
                 catch
                 {
-                    if (number_of_try < 4)
-                    {
-                        number_of_try += 1;
-                        get_single_content(id);
-                    }
-                    else
+                    //if (number_of_try < 4)
+                    //{
+                    //    number_of_try += 1;
+                    //    get_single_content(id);
+                    //}
+                  //  else
                     {
                         return null;
                     }

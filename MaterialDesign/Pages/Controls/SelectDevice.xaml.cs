@@ -47,19 +47,25 @@ namespace MaterialDesign2.Pages.Controls
                 }
                 else if (oculus.IsChecked == true)
                 {
-                    //MaterialMessageBox.Show("این امکان با مساعدت مهندس جعفری در آینده ای نزدیک افزوده خواهد شد", "هشدار");
-                    CustomMaterialMessageBox m = new CustomMaterialMessageBox
-                    {
-                        TxtMessage = { Text = "این امکان با مساعدت مهندس جعفری در آینده ای نزدیک افزوده خواهد شد", Foreground = Brushes.White },
-                        TxtTitle = { Text = "پیام", Foreground = Brushes.White },
-                        BtnOk = { Content = "تایید", HorizontalAlignment = HorizontalAlignment.Center },
-                        MainContentControl = { Background = Brushes.Black },
-                        TitleBackgroundPanel = { Background = Brushes.Black },
+                //MaterialMessageBox.Show("این امکان با مساعدت مهندس جعفری در آینده ای نزدیک افزوده خواهد شد", "هشدار");
+                //CustomMaterialMessageBox m = new CustomMaterialMessageBox
+                //{
+                //    TxtMessage = { Text = "این امکان با مساعدت مهندس جعفری در آینده ای نزدیک افزوده خواهد شد", Foreground = Brushes.White },
+                //    TxtTitle = { Text = "پیام", Foreground = Brushes.White },
+                //    BtnOk = { Content = "تایید", HorizontalAlignment = HorizontalAlignment.Center },
+                //    MainContentControl = { Background = Brushes.Black },
+                //    TitleBackgroundPanel = { Background = Brushes.Black },
 
-                        BorderBrush = Brushes.BlueViolet,
-                    };
-                    m.Show();       
-                }
+                //    BorderBrush = Brushes.BlueViolet,
+                //};
+                //m.Show();   
+                String counter = "http://titar.ir/contents/video/" + SelectedItem.file_name;
+
+                System.Diagnostics.Process pProcess = new System.Diagnostics.Process();
+                pProcess.StartInfo.FileName = @"Player\ViveTitarPlayer.exe";
+                pProcess.Start();
+                SendUDP("127.0.0.1", 41181, counter.ToString(), counter.ToString().Length);
+            }
                 else
                 {
                     player.typeContent = "video";

@@ -64,7 +64,7 @@ namespace MaterialDesign2.Pages
                             Dispatcher.BeginInvoke(
                               (Action)(() =>
                               {
-                                  if (single_content != null)
+                                  if (single_content.id != null)
                                   {
 
                                       if ((MaterialDesign.App.Current as MaterialDesign.App).login_account.Loged_in == true)
@@ -197,6 +197,8 @@ namespace MaterialDesign2.Pages
         {
             int index = 0;
             List1.Children.Clear(); 
+            if(related_content!=null)
+            { 
             while (index<related_content.Count())
             {
                 BitmapImage bitmap = new BitmapImage();
@@ -267,6 +269,7 @@ namespace MaterialDesign2.Pages
                 temp.Children.Add(Seen_Count);
                 card1.Content = temp;
                 index++;
+            }
             }
         }
 
