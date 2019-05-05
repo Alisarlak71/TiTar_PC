@@ -44,17 +44,29 @@ namespace MaterialDesign1.Pages
                 Thread t = new Thread(
                      o =>
                      {
-                         (MaterialDesign.App.Current as MaterialDesign.App).Recive_Content.recive_content("last_video", ctype);
-                         (MaterialDesign.App.Current as MaterialDesign.App).Recive_Content.recive_content("most_seen", ctype);
-                         (MaterialDesign.App.Current as MaterialDesign.App).Recive_Content.recive_content("most_love", ctype);
-                         (MaterialDesign.App.Current as MaterialDesign.App).Recive_Content.recive_content("most_down", ctype);
+                         (MaterialDesign.App.Current as MaterialDesign.App).Recive_Content1.url = "http://titar.ir/api/pc/contents/1/"+ ctype;
+                         (MaterialDesign.App.Current as MaterialDesign.App).Recive_Content1.get_connection();
+                         (MaterialDesign.App.Current as MaterialDesign.App).LasteContent=(MaterialDesign.App.Current as MaterialDesign.App).Recive_Content1.response_content["contents"];
+
+                         (MaterialDesign.App.Current as MaterialDesign.App).Recive_Content1.url = "http://titar.ir/api/pc/contents/2/" + ctype;
+                         (MaterialDesign.App.Current as MaterialDesign.App).Recive_Content1.get_connection();
+                         (MaterialDesign.App.Current as MaterialDesign.App).MostSeen = (MaterialDesign.App.Current as MaterialDesign.App).Recive_Content1.response_content["contents"];
+
+                         (MaterialDesign.App.Current as MaterialDesign.App).Recive_Content1.url = "http://titar.ir/api/pc/contents/3/" + ctype; ;
+                         (MaterialDesign.App.Current as MaterialDesign.App).Recive_Content1.get_connection();
+                         (MaterialDesign.App.Current as MaterialDesign.App).MostLove = (MaterialDesign.App.Current as MaterialDesign.App).Recive_Content1.response_content["contents"];
+
+                         (MaterialDesign.App.Current as MaterialDesign.App).Recive_Content1.url = "http://titar.ir/api/pc/contents/4/" + ctype; ;
+                         (MaterialDesign.App.Current as MaterialDesign.App).Recive_Content1.get_connection();
+                         (MaterialDesign.App.Current as MaterialDesign.App).MostDown = (MaterialDesign.App.Current as MaterialDesign.App).Recive_Content1.response_content["contents"];
+
+
+                         
 
                          Dispatcher.BeginInvoke(
                            (Action)(() =>
                            {
-
                                (MaterialDesign.App.Current.MainWindow as MaterialDesign.MainWindow).StartStopWait();
-
                                List1.Children.Clear();
                                List2.Children.Clear();
                                List3.Children.Clear();
@@ -63,10 +75,12 @@ namespace MaterialDesign1.Pages
                                Addtolist2();
                                Addtolist3();
                                Addtolist4();
-                               addbanner();
-                           }));
+                              // addbanner();
+                               
+                           }), DispatcherPriority.ContextIdle, null);
                      });
                 t.Start();
+                
                 this.ShowsNavigationUI = false;
                 //
 
@@ -96,7 +110,7 @@ namespace MaterialDesign1.Pages
         {
 
             int index = 0;
-            while (index < (MaterialDesign.App.Current as MaterialDesign.App).LasteContent.Count)
+            while (index < (MaterialDesign.App.Current as MaterialDesign.App).LasteContent.Count())
             {
                 RecentTitle.Text = "ویدئو های اخیر";
                 ImageBrush bimg = null;
@@ -116,7 +130,7 @@ namespace MaterialDesign1.Pages
                 //}
                 //catch (Exception)
                 //{
-                bimg = new ImageBrush(new BitmapImage(new Uri("http://titar.ir/contents/thumbnail/" + (MaterialDesign.App.Current as MaterialDesign.App).LasteContent[index].thumbnail.ToString())));
+                bimg = new ImageBrush(new BitmapImage(new Uri("http://titar.ir/contents/thumbnail/" + (MaterialDesign.App.Current as MaterialDesign.App).LasteContent[index]["thumbnail"].ToString())));
                 //}
                 Grid cover = new Grid();
                 List1.Children.Add(cover);
@@ -130,8 +144,8 @@ namespace MaterialDesign1.Pages
                 //cover.Children.Add(ss);
 
                 CustomButton card1 = new CustomButton();
-                card1.Answer = (MaterialDesign.App.Current as MaterialDesign.App).LasteContent[index].id.ToString();
-                card1.type = (MaterialDesign.App.Current as MaterialDesign.App).LasteContent[index].type.ToString(); ;
+                card1.Answer = (MaterialDesign.App.Current as MaterialDesign.App).LasteContent[index]["id"].ToString();
+                card1.type = (MaterialDesign.App.Current as MaterialDesign.App).LasteContent[index]["type"].ToString();
                 card1.Margin = new Thickness(5, 5, 5, 5);
                 card1.Width = 300;
                 card1.Height = 300;
@@ -153,7 +167,7 @@ namespace MaterialDesign1.Pages
                 // title
                 TextBlock Title = new TextBlock();
                 Title.FontSize = 15;
-                Title.Text = (MaterialDesign.App.Current as MaterialDesign.App).LasteContent[index].title;
+                Title.Text = (MaterialDesign.App.Current as MaterialDesign.App).LasteContent[index]["title"].ToString();
                 Title.Style = (Style)FindResource("MaterialDesignTitleTextBlock");
                 Title.Foreground = Brushes.White;
                 Title.TextAlignment = TextAlignment.Center;
@@ -161,7 +175,7 @@ namespace MaterialDesign1.Pages
 
                 TextBlock Author = new TextBlock();
                 Author.FontSize = 10;
-                Author.Text = "ناشر : " + (MaterialDesign.App.Current as MaterialDesign.App).LasteContent[index].author["name"];
+                Author.Text = "ناشر : " + (MaterialDesign.App.Current as MaterialDesign.App).LasteContent[index]["author"]["name"];
                 Author.Foreground = Brushes.White;
                 Author.HorizontalAlignment = HorizontalAlignment.Right;
                 Author.VerticalAlignment = VerticalAlignment.Bottom;
@@ -171,7 +185,7 @@ namespace MaterialDesign1.Pages
 
                 TextBlock Seen_Count = new TextBlock();
                 Seen_Count.FontSize = 10;
-                Seen_Count.Text = "بازدید : " + (MaterialDesign.App.Current as MaterialDesign.App).LasteContent[index].seen_count;
+                Seen_Count.Text = "بازدید : " + (MaterialDesign.App.Current as MaterialDesign.App).LasteContent[index]["seen_count"].ToString();
                 Seen_Count.Foreground = Brushes.White;
                 Seen_Count.HorizontalAlignment = HorizontalAlignment.Left;
                 Seen_Count.VerticalAlignment = VerticalAlignment.Bottom;
@@ -185,7 +199,7 @@ namespace MaterialDesign1.Pages
         {
 
             int index = 0;
-            while (index < (MaterialDesign.App.Current as MaterialDesign.App).MostSeen.Count)
+            while (index < (MaterialDesign.App.Current as MaterialDesign.App).MostSeen.Count())
             {
                 Animation.Text = "انیمیشن";
                 BitmapImage bitmap = new BitmapImage();
@@ -203,7 +217,7 @@ namespace MaterialDesign1.Pages
                 //}
                 //catch (Exception)
                 //{
-                bimg = new ImageBrush(new BitmapImage(new Uri("http://titar.ir/contents/thumbnail/" + (MaterialDesign.App.Current as MaterialDesign.App).MostSeen[index].thumbnail.ToString())));
+                bimg = new ImageBrush(new BitmapImage(new Uri("http://titar.ir/contents/thumbnail/" + (MaterialDesign.App.Current as MaterialDesign.App).MostSeen[index]["thumbnail"].ToString())));
                 //}
                 Grid cover = new Grid();
                 cover.Width = 300;
@@ -220,8 +234,8 @@ namespace MaterialDesign1.Pages
                 //cover.Children.Add(ss);
 
                 CustomButton card1 = new CustomButton();
-                card1.Answer = (MaterialDesign.App.Current as MaterialDesign.App).MostSeen[index].id.ToString();
-                card1.type = (MaterialDesign.App.Current as MaterialDesign.App).MostSeen[index].type.ToString();
+                card1.Answer = (MaterialDesign.App.Current as MaterialDesign.App).MostSeen[index]["id"].ToString();
+                card1.type = (MaterialDesign.App.Current as MaterialDesign.App).MostSeen[index]["type"].ToString();
                 card1.Margin = new Thickness(5, 5, 5, 5);
                 card1.Width = 300;
                 card1.Height = 300;
@@ -243,7 +257,7 @@ namespace MaterialDesign1.Pages
                 /// title
                 TextBlock Title = new TextBlock();
                 Title.FontSize = 15;
-                Title.Text = (MaterialDesign.App.Current as MaterialDesign.App).MostSeen[index].title;
+                Title.Text = (MaterialDesign.App.Current as MaterialDesign.App).MostSeen[index]["title"].ToString();
                 Title.Style = (Style)FindResource("MaterialDesignTitleTextBlock");
                 Title.Foreground = Brushes.White;
                 Title.TextAlignment = TextAlignment.Center;
@@ -251,7 +265,7 @@ namespace MaterialDesign1.Pages
 
                 TextBlock Author = new TextBlock();
                 Author.FontSize = 10;
-                Author.Text = "ناشر : " + (MaterialDesign.App.Current as MaterialDesign.App).MostSeen[index].author["name"];
+                Author.Text = "ناشر : " + (MaterialDesign.App.Current as MaterialDesign.App).MostSeen[index]["author"]["name"];
                 Author.Foreground = Brushes.White;
                 Author.HorizontalAlignment = HorizontalAlignment.Right;
                 Author.VerticalAlignment = VerticalAlignment.Bottom;
@@ -261,7 +275,7 @@ namespace MaterialDesign1.Pages
 
                 TextBlock Seen_Count = new TextBlock();
                 Seen_Count.FontSize = 10;
-                Seen_Count.Text = "بازدید : " + (MaterialDesign.App.Current as MaterialDesign.App).MostSeen[index].seen_count;
+                Seen_Count.Text = "بازدید : " + (MaterialDesign.App.Current as MaterialDesign.App).MostSeen[index]["seen_count"].ToString();
                 Seen_Count.Foreground = Brushes.White;
                 Seen_Count.HorizontalAlignment = HorizontalAlignment.Left;
                 Seen_Count.VerticalAlignment = VerticalAlignment.Bottom;
@@ -275,7 +289,7 @@ namespace MaterialDesign1.Pages
         {
 
             int index = 0;
-            while (index < (MaterialDesign.App.Current as MaterialDesign.App).MostLove.Count)
+            while (index < (MaterialDesign.App.Current as MaterialDesign.App).MostLove.Count())
             {
                 Music.Text = "موزیک";
                 BitmapImage bitmap = new BitmapImage();
@@ -293,7 +307,7 @@ namespace MaterialDesign1.Pages
                 //}
                 //catch (Exception)
                 //{
-                bimg = new ImageBrush(new BitmapImage(new Uri("http://titar.ir/contents/thumbnail/" + (MaterialDesign.App.Current as MaterialDesign.App).MostLove[index].thumbnail.ToString())));
+                bimg = new ImageBrush(new BitmapImage(new Uri("http://titar.ir/contents/thumbnail/" + (MaterialDesign.App.Current as MaterialDesign.App).MostLove[index]["thumbnail"].ToString())));
                 //}
                 Grid cover = new Grid();
                 cover.Width = 300;
@@ -310,8 +324,8 @@ namespace MaterialDesign1.Pages
                 //cover.Children.Add(ss);
 
                 CustomButton card1 = new CustomButton();
-                card1.Answer = (MaterialDesign.App.Current as MaterialDesign.App).MostLove[index].id.ToString();
-                card1.type = (MaterialDesign.App.Current as MaterialDesign.App).MostLove[index].type.ToString();
+                card1.Answer = (MaterialDesign.App.Current as MaterialDesign.App).MostLove[index]["id"].ToString();
+                card1.type = (MaterialDesign.App.Current as MaterialDesign.App).MostLove[index]["type"].ToString();
 
                 card1.Margin = new Thickness(5, 5, 5, 5);
                 card1.Width = 300;
@@ -334,7 +348,7 @@ namespace MaterialDesign1.Pages
                 /// title
                 TextBlock Title = new TextBlock();
                 Title.FontSize = 15;
-                Title.Text = (MaterialDesign.App.Current as MaterialDesign.App).MostLove[index].title;
+                Title.Text = (MaterialDesign.App.Current as MaterialDesign.App).MostLove[index]["title"].ToString();
                 Title.Style = (Style)FindResource("MaterialDesignTitleTextBlock");
                 Title.Foreground = Brushes.White;
                 Title.TextAlignment = TextAlignment.Center;
@@ -342,7 +356,7 @@ namespace MaterialDesign1.Pages
 
                 TextBlock Author = new TextBlock();
                 Author.FontSize = 10;
-                Author.Text = "ناشر : " + (MaterialDesign.App.Current as MaterialDesign.App).MostLove[index].author["name"];
+                Author.Text = "ناشر : " + (MaterialDesign.App.Current as MaterialDesign.App).MostLove[index]["author"]["name"].ToString();
                 Author.Foreground = Brushes.White;
                 Author.HorizontalAlignment = HorizontalAlignment.Right;
                 Author.VerticalAlignment = VerticalAlignment.Bottom;
@@ -352,7 +366,7 @@ namespace MaterialDesign1.Pages
 
                 TextBlock Seen_Count = new TextBlock();
                 Seen_Count.FontSize = 10;
-                Seen_Count.Text = "بازدید : " + (MaterialDesign.App.Current as MaterialDesign.App).MostLove[index].seen_count;
+                Seen_Count.Text = "بازدید : " + (MaterialDesign.App.Current as MaterialDesign.App).MostLove[index]["seen_count"].ToString();
                 Seen_Count.Foreground = Brushes.White;
                 Seen_Count.HorizontalAlignment = HorizontalAlignment.Left;
                 Seen_Count.VerticalAlignment = VerticalAlignment.Bottom;
@@ -367,7 +381,7 @@ namespace MaterialDesign1.Pages
         {
 
             int index = 0;
-            while (index < (MaterialDesign.App.Current as MaterialDesign.App).MostDown.Count)
+            while (index < (MaterialDesign.App.Current as MaterialDesign.App).MostDown.Count())
             {
                 Sport.Text = "ورزشی";
                 BitmapImage bitmap = new BitmapImage();
@@ -385,7 +399,7 @@ namespace MaterialDesign1.Pages
                 //}
                 //catch (Exception)
                 //{
-                bimg = new ImageBrush(new BitmapImage(new Uri("http://titar.ir/contents/thumbnail/" + (MaterialDesign.App.Current as MaterialDesign.App).MostDown[index].thumbnail.ToString())));
+                bimg = new ImageBrush(new BitmapImage(new Uri("http://titar.ir/contents/thumbnail/" + (MaterialDesign.App.Current as MaterialDesign.App).MostDown[index]["thumbnail"].ToString())));
                 //}
                 Grid cover = new Grid();
                 cover.Width = 300;
@@ -402,8 +416,8 @@ namespace MaterialDesign1.Pages
                 //cover.Children.Add(ss);
 
                 CustomButton card1 = new CustomButton();
-                card1.Answer = (MaterialDesign.App.Current as MaterialDesign.App).MostDown[index].id.ToString();
-                card1.type = (MaterialDesign.App.Current as MaterialDesign.App).MostDown[index].type.ToString();
+                card1.Answer = (MaterialDesign.App.Current as MaterialDesign.App).MostDown[index]["id"].ToString();
+                card1.type = (MaterialDesign.App.Current as MaterialDesign.App).MostDown[index]["type"].ToString();
 
                 card1.Margin = new Thickness(5, 5, 5, 5);
                 card1.Width = 300;
@@ -427,7 +441,7 @@ namespace MaterialDesign1.Pages
                 /// title
                 TextBlock Title = new TextBlock();
                 Title.FontSize = 15;
-                Title.Text = (MaterialDesign.App.Current as MaterialDesign.App).MostDown[index].title;
+                Title.Text = (MaterialDesign.App.Current as MaterialDesign.App).MostDown[index]["title"].ToString();
                 Title.Style = (Style)FindResource("MaterialDesignTitleTextBlock");
                 Title.Foreground = Brushes.White;
                 Title.TextAlignment = TextAlignment.Center;
@@ -435,7 +449,7 @@ namespace MaterialDesign1.Pages
 
                 TextBlock Author = new TextBlock();
                 Author.FontSize = 10;
-                Author.Text = "ناشر : " + (MaterialDesign.App.Current as MaterialDesign.App).MostDown[index].author["name"];
+                Author.Text = "ناشر : " + (MaterialDesign.App.Current as MaterialDesign.App).MostDown[index]["author"]["name"].ToString();
                 Author.Foreground = Brushes.White;
                 Author.HorizontalAlignment = HorizontalAlignment.Right;
                 Author.VerticalAlignment = VerticalAlignment.Bottom;
@@ -445,7 +459,7 @@ namespace MaterialDesign1.Pages
 
                 TextBlock Seen_Count = new TextBlock();
                 Seen_Count.FontSize = 10;
-                Seen_Count.Text = "بازدید : " + (MaterialDesign.App.Current as MaterialDesign.App).MostDown[index].seen_count;
+                Seen_Count.Text = "بازدید : " + (MaterialDesign.App.Current as MaterialDesign.App).MostDown[index]["seen_count"].ToString();
                 Seen_Count.Foreground = Brushes.White;
                 Seen_Count.HorizontalAlignment = HorizontalAlignment.Left;
                 Seen_Count.VerticalAlignment = VerticalAlignment.Bottom;
@@ -499,7 +513,6 @@ namespace MaterialDesign1.Pages
                     elementName = mouseWasDownOn.Answer;
                 }
 
-                (MaterialDesign.App.Current as MaterialDesign.App).Recive_Content.number_of_try = 0;
 
                 if ((MaterialDesign.App.Current as MaterialDesign.App).Internet_connect.IsNetworkAvailable() == true)
                 {
@@ -551,53 +564,53 @@ namespace MaterialDesign1.Pages
         public List<string> bannertext= new List<string>();
         public void addbanner()
         {
-            MaterialDesign2.Classes.Banners bannercontent = new MaterialDesign2.Classes.Banners();
-            List<MaterialDesign2.Classes.Banners> bannercontent1 = bannercontent.get_banners();
-            if (bannercontent1 != null)
-            {
-                int index = 0;
-                while (index < bannercontent1.Count)
-                {
-                    //Image thumbnail = new Image();
-                    //BitmapImage image = new BitmapImage(new Uri("http://titar.ir/thumbnails/banners/" + bannercontent1[index].thumbnail));
-                    //thumbnail.Source = image;
+            //MaterialDesign2.Classes.Banners bannercontent = new MaterialDesign2.Classes.Banners();
+            //List<MaterialDesign2.Classes.Banners> bannercontent1 = bannercontent.get_banners();
+            //if (bannercontent1 != null)
+            //{
+            //    int index = 0;
+            //    while (index < bannercontent1.Count)
+            //    {
+            //        //Image thumbnail = new Image();
+            //        //BitmapImage image = new BitmapImage(new Uri("http://titar.ir/thumbnails/banners/" + bannercontent1[index].thumbnail));
+            //        //thumbnail.Source = image;
 
-                    banneritems grid = new banneritems();
-                    ImageBrush bimg = new ImageBrush(new BitmapImage(new Uri("http://titar.ir/thumbnails/banners/" + bannercontent1[index].thumbnail)));
+            //        banneritems grid = new banneritems();
+            //        ImageBrush bimg = new ImageBrush(new BitmapImage(new Uri("http://titar.ir/thumbnails/banners/" + bannercontent1[index].thumbnail)));
 
-                    grid.Background = bimg;
+            //        grid.Background = bimg;
                     
-                    grid.link = bannercontent1[index].link;
-                    grid.MouseDown += open_link;
-                    FlipView.Items.Add(grid);
-                    bannertext.Add( bannercontent1[index].title);
-                    index++;
-                }
-                int change = 1;
+            //        grid.link = bannercontent1[index].link;
+            //        grid.MouseDown += open_link;
+            //        //FlipView.Items.Add(grid);
+            //        bannertext.Add( bannercontent1[index].title);
+            //        index++;
+            //    }
+            //    int change = 1;
 
-                DispatcherTimer timer = new DispatcherTimer();
-                timer.Interval = TimeSpan.FromSeconds(3);
-                timer.Tick += (o, a) =>
-                {
-                    // If we'd go out of bounds then reverse
-                    int newIndex = FlipView.SelectedIndex + change;
-                    if (newIndex >= FlipView.Items.Count || newIndex < 0)
-                    {
-                        change *= -1;
-                    }
+            //    DispatcherTimer timer = new DispatcherTimer();
+            //    timer.Interval = TimeSpan.FromSeconds(3);
+            //    timer.Tick += (o, a) =>
+            //    {
+            //        // If we'd go out of bounds then reverse
+            //       // int newIndex = FlipView.SelectedIndex + change;
+            //        //if (newIndex >= FlipView.Items.Count || newIndex < 0)
+            //        {
+            //            change *= -1;
+            //        }
 
-                    FlipView.SelectedIndex += change;
-                };
-                timer.Start();
-            }
+            //      //  FlipView.SelectedIndex += change;
+            //    };
+            //    timer.Start();
+            //}
 
         }
 
         private void FlipView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var flipview = ((MahApps.Metro.Controls.FlipView)sender);
-            if(bannertext.Count!=0)
-            FlipView.BannerText = bannertext[flipview.SelectedIndex];
+            //if(bannertext.Count!=0)
+            //FlipView.BannerText = bannertext[flipview.SelectedIndex];
         }
         private void open_link(object sender, MouseEventArgs e)
         {

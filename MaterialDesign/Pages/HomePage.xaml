@@ -52,11 +52,11 @@
             </slv:DraggableListView>
         </StackPanel>
         <!--banner-->
-        <metro:FlipView x:Name="FlipView" 
+        <!--<metro:FlipView x:Name="FlipView" 
                    BorderThickness="0"
                         Height="300" Width="500" SelectionChanged="FlipView_SelectionChanged" FlowDirection="RightToLeft">
            
-        </metro:FlipView>
+        </metro:FlipView>-->
         
         
         

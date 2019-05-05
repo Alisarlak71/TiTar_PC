@@ -28,17 +28,17 @@ namespace MaterialDesign2.Pages
     /// </summary>
     public partial class AppGamePage : Page
     {
-        public MaterialDesign2.Classes.Content SelectedItem = new MaterialDesign2.Classes.Content();
-        public List<MaterialDesign2.Classes.CommentClass> SelectedComment= new List<MaterialDesign2.Classes.CommentClass>();
-        public MaterialDesign2.Classes.Channel Channel_Of_Content=new MaterialDesign2.Classes.Channel();
-        public MaterialDesign2.Classes.Content theContent
+        public JToken SelectedItem;
+        public JToken SelectedComment;
+        public JToken Channel_Of_Content;
+        public JToken theContent
         {
             get { return SelectedItem; }
             set { SelectedItem = value; }
         }
         public string selected_id;
         public bool liked=false;
-        public List<MaterialDesign2.Classes.CommentClass> IComment
+        public JToken IComment
         {
             get { return SelectedComment; }
             set { SelectedComment = value; }
@@ -56,15 +56,19 @@ namespace MaterialDesign2.Pages
                         o =>
                         {
                             MaterialDesign2.Classes.Caching Cachelayer = new MaterialDesign2.Classes.Caching();
-                            MaterialDesign2.Classes.Content single_content = MaterialDesign2.Classes.Caching.Get_single_from_cache<MaterialDesign2.Classes.Content>("singlecontent" + selected_id);
+                            JToken single_content = MaterialDesign2.Classes.Caching.Get_single_from_cache<JToken>("singlecontent" + selected_id);
                             if (single_content == null)
                             {
-                                single_content = (MaterialDesign.App.Current as MaterialDesign.App).Recive_Content.get_single_content(selected_id);
+                                
+                                (MaterialDesign.App.Current as MaterialDesign.App).Recive_Content1.url = "http://titar.ir/api/pc/content/" + selected_id+"/"+ (MaterialDesign.App.Current as MaterialDesign.App).User.id;
+                                (MaterialDesign.App.Current as MaterialDesign.App).Recive_Content1.get_connection();
+
+                                single_content = (MaterialDesign.App.Current as MaterialDesign.App).Recive_Content1.response_content;
                             }
                             Dispatcher.BeginInvoke(
                               (Action)(() =>
                               {
-                                  if (single_content.id != null)
+                                  if (single_content["content"]["id"] != null)
                                   {
 
                                       if ((MaterialDesign.App.Current as MaterialDesign.App).login_account.Loged_in == true)
@@ -73,11 +77,11 @@ namespace MaterialDesign2.Pages
                                           MaterialDesign2.Classes.Channels channel = new MaterialDesign2.Classes.Channels();
                                           this.SelectedItem = single_content;
                                           this.theContent = single_content;
-                                          this.IComment = single_content.comments;
-                                          Channel_Of_Content = single_content.channel_of_single;
-                                          Cachelayer.Store_single_to_cache(single_content, single_content.id);
+                                          this.IComment = single_content["content"]["comments"];
+                                          Channel_Of_Content = single_content["content"]["channel"];
+                                          Cachelayer.Store_single_to_cache(single_content, single_content["content"]["id"].ToString());
 
-                                          if (single_content.comments != null)
+                                          if (single_content["content"]["comments"] .HasValues)
                                               Aaddcomment();
                                           lable_click Author = new lable_click();
                                           lable_click Channel = new lable_click();
@@ -85,7 +89,7 @@ namespace MaterialDesign2.Pages
                                           Author.MouseDown += go_to_author;
                                           Author.Cursor = Cursors.Hand;
                                           Author.HorizontalAlignment = HorizontalAlignment.Left;
-                                          Author.SelectId = SelectedItem.author_id;
+                                          Author.SelectId = SelectedItem["content"]["author_id"].ToString();
                                           Label seperator = new Label();
                                           seperator.Foreground = Brushes.White;
                                           seperator.HorizontalAlignment = HorizontalAlignment.Right;
@@ -93,18 +97,18 @@ namespace MaterialDesign2.Pages
                                           Channel.Foreground = Brushes.White;
                                           Channel.MouseDown += go_to_channel;
                                           Channel.Cursor = Cursors.Hand;
-                                          Channel.SelectId = SelectedItem.channel_id;
+                                          Channel.SelectId = SelectedItem["content"]["channel_id"].ToString();
                                           Channel.HorizontalAlignment = HorizontalAlignment.Left;
 
-                                          Author.Content = SelectedItem.author["name"];
+                                          Author.Content = SelectedItem["content"]["author"]["name"];
+                                          if (Channel_Of_Content.HasValues)
+                                               Channel.Content = Channel_Of_Content[0]["name"];
 
-                                          Channel.Content = Channel_Of_Content.name;
-
-                                          Title_Video.Content = SelectedItem.title;
+                                          Title_Video.Content = SelectedItem["content"]["title"];
                                           Detials_Content.Children.Clear();
                                           Detials_Content.Children.Add(Author);
 
-                                          Description_txt.Text = SelectedItem.description;
+                                          Description_txt.Text = SelectedItem["content"]["description"].ToString();
                                           BitmapImage bitmap = new BitmapImage();
                                           ImageBrush bimg;
                                           //try
@@ -120,20 +124,20 @@ namespace MaterialDesign2.Pages
                                           //}
                                           //catch (Exception)
                                           //{
-                                          bimg = new ImageBrush(new BitmapImage(new Uri("http://titar.ir/contents/thumbnail/" + SelectedItem.thumbnail)));
+                                          bimg = new ImageBrush(new BitmapImage(new Uri("http://titar.ir/contents/thumbnail/" + SelectedItem["content"]["thumbnail"])));
                                           //}
                                           Thumbnail.Source = bimg.ImageSource;
                                           //backround.Background = bimg;
                                           //(MaterialDesign.App.Current.MainWindow as MaterialDesign.MainWindow).background.Background = bimg;
                                           (MaterialDesign.App.Current.MainWindow as MaterialDesign.MainWindow).StartStopWait();
-                                          liked = single_content.rated;
+                                          liked = (bool) single_content["content"]["rated"];
                                           if (liked == true)
                                           {
                                               Like.Foreground = Brushes.Red;
                                           }
                                         
 
-                                          Addtolist1(single_content.related);
+                                          Addtolist1(single_content["content"]["related"]);
                                       }
                                       else
                                       {
@@ -276,16 +280,20 @@ namespace MaterialDesign2.Pages
         private void Aaddcomment()
         {
             int index=0;
-            while (index < SelectedComment.Count)
+            while (index < SelectedComment.Count())
             {
                 CommentHolder.Children.Clear();
                 var color = new BrushConverter();
 
                 TextBlock name = new TextBlock();
                 name.Foreground = (Brush)color.ConvertFrom("#bff442");
-                if (SelectedComment[index].username["name"].ToString() != "")
+
+                MaterialDesign2.Classes.Users  tempuser = new MaterialDesign2.Classes.Users();
+                JToken username = tempuser.get_user_info(SelectedComment[index]["user_id"].ToString());
+
+                if (username.HasValues)
                 {
-                    name.Text = SelectedComment[index].username["name"].ToString();
+                    name.Text = username["name"].ToString();
                 }
                 else
                 {
@@ -295,21 +303,21 @@ namespace MaterialDesign2.Pages
                 ///
                 TextBlock body = new TextBlock();
                 body.Margin = new Thickness(8, 8, 8, 8);
-                body.Text = SelectedComment[index].body;
+                body.Text = SelectedComment[index]["body"].ToString();
                 body.TextWrapping = TextWrapping.Wrap;
                 CommentHolder.Children.Add(body);
                 ///
-                if (SelectedComment[index].answer != "")
+                if (SelectedComment[index]["answer"].ToString() != "")
                 {
                     TextBlock answertext = new TextBlock();
                     answertext.Margin = new Thickness(15, 15, 15, 5);
                     answertext.Foreground = Brushes.Red;
-                    answertext.Text = SelectedItem.author["name"].ToString();//"پاسخ ";
+                    answertext.Text = SelectedItem["author"]["name"].ToString();//"پاسخ ";
                     CommentHolder.Children.Add(answertext);
                     ///
                     TextBlock answer = new TextBlock();
                     answer.Margin = new Thickness(25,10, 25, 10);
-                    answer.Text = SelectedComment[index].answer;
+                    answer.Text = SelectedComment[index]["answer"].ToString();
                     CommentHolder.Children.Add(answer);
                 }
                 Separator sp = new Separator();
@@ -378,16 +386,16 @@ namespace MaterialDesign2.Pages
         public string device_selected;
         private void Down_App_Open(object sender, RoutedEventArgs e)
         {
-            if (SelectedItem.type == "video")
+            if (SelectedItem["content"]["type"].ToString() == "video")
             {
                 MaterialDesign2.Pages.Controls.SelectDevice PopupDevice = new MaterialDesign2.Pages.Controls.SelectDevice();
                 PopupDevice.SelectedItem = SelectedItem;
                 PopupDevice.ShowDialog();
             }
-            else if (SelectedItem.type == "photo")
+            else if (SelectedItem["content"]["type"].ToString() == "photo")
             {
                 MaterialDesign2.Pages.Controls.ImagePlayer player = new MaterialDesign2.Pages.Controls.ImagePlayer();
-                player.url = "http://titar.ir/contents/photo/" + SelectedItem.file_name;
+                player.url = "http://titar.ir/contents/photo/" + SelectedItem["content"]["file_name"];
                 player.typeContent = "image";
                 player.Show();
             }
@@ -420,7 +428,7 @@ namespace MaterialDesign2.Pages
             o =>
             {
                 MaterialDesign2.Classes.Comment Send = new MaterialDesign2.Classes.Comment();
-                i = Send.Post_Comment(SelectedItem.id, (MaterialDesign.App.Current as MaterialDesign.App).User.id, body);
+                i = Send.Post_Comment(SelectedItem["content"]["id"].ToString(), (MaterialDesign.App.Current as MaterialDesign.App).User.id, body);
                 Dispatcher.BeginInvoke(
                                   (Action)(() =>
                                   {
@@ -459,11 +467,11 @@ namespace MaterialDesign2.Pages
                 Dictionary<string, string> variables = DotEnvFile.DotEnvFile.LoadFile(pathToFile);
                 string url = variables["BaseUrl"] + "rate/like";
 
-                if (send_like_class.send_like(SelectedItem.id, (MaterialDesign.App.Current as MaterialDesign.App).User.id, url) == 0)
+                if (send_like_class.send_like(SelectedItem["content"]["id"].ToString(), (MaterialDesign.App.Current as MaterialDesign.App).User.id, url) == 0)
                 {
                     MaterialDesign2.Classes.Caching Cachelayer = new MaterialDesign2.Classes.Caching();
-                    SelectedItem.rated = true;
-                    Cachelayer.Store_single_to_cache(SelectedItem, SelectedItem.id);
+                    SelectedItem["content"]["rated"] = "true";
+                    Cachelayer.Store_single_to_cache(SelectedItem, SelectedItem["content"]["id"].ToString());
 
                     AnimateLikeButton(360);
                     Like.Foreground = Brushes.Red;
@@ -475,10 +483,10 @@ namespace MaterialDesign2.Pages
                 string pathToFile = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location) + "\\envfile.env";
                 Dictionary<string, string> variables = DotEnvFile.DotEnvFile.LoadFile(pathToFile);
                 string url = variables["BaseUrl"] + "rate/like/delete";
-                if (send_like_class.send_like(SelectedItem.id, (MaterialDesign.App.Current as MaterialDesign.App).User.id, url) == 0)
+                if (send_like_class.send_like(SelectedItem["content"]["id"].ToString(), (MaterialDesign.App.Current as MaterialDesign.App).User.id, url) == 0)
                 {
                     MaterialDesign2.Classes.Caching Cachelayer = new MaterialDesign2.Classes.Caching();
-                    SelectedItem.rated = false;
+                    SelectedItem["content"]["rated"] = "false";
 
                     AnimateLikeButton(-360);
                     Like.Foreground = Brushes.White;

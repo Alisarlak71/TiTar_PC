@@ -165,6 +165,7 @@
     <Compile Include="Classes\Caching.cs" />
     <Compile Include="Classes\Channels.cs" />
     <Compile Include="Classes\Comment.cs" />
+    <Compile Include="Classes\Connection.cs" />
     <Compile Include="Classes\Content.cs" />
     <Compile Include="Classes\Encryption.cs" />
     <Compile Include="Classes\FtpWorks.cs" />

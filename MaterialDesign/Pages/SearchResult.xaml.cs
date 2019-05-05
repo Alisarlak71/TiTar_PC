@@ -58,15 +58,15 @@ namespace MaterialDesign2.Pages
             Thread t = new Thread(
                              o =>
                              {
-                                 (MaterialDesign.App.Current as MaterialDesign.App).Recive_Content.number_of_try = 0;
-                                 (MaterialDesign.App.Current as MaterialDesign.App).Recive_Content.get_search_content(query);
+                                
+                                 (MaterialDesign.App.Current as MaterialDesign.App).Recive_Content1.url = "http://titar.ir/api/pc/search/" + query;
+                                 (MaterialDesign.App.Current as MaterialDesign.App).Recive_Content1.get_connection();
+                                 (MaterialDesign.App.Current as MaterialDesign.App).SearchResult = (MaterialDesign.App.Current as MaterialDesign.App).Recive_Content1.response_content["contents"];
                                  Dispatcher.BeginInvoke(
                                    (Action)(() =>
                                    {
-
                                        (MaterialDesign.App.Current.MainWindow as MaterialDesign.MainWindow).StartStopWait();
                                                Addtolist2();
-                                        
                                    }));
                              });
             t.Start();
@@ -77,7 +77,7 @@ namespace MaterialDesign2.Pages
         private void Addtolist2()
         {
             int index = 0;
-            while (index < (MaterialDesign.App.Current as MaterialDesign.App).SearchResult.Count)
+            while (index < (MaterialDesign.App.Current as MaterialDesign.App).SearchResult.Count())
             {
                 BitmapImage bitmap = new BitmapImage();
                 ImageBrush bimg;
@@ -94,11 +94,11 @@ namespace MaterialDesign2.Pages
                 //}
                 //catch (Exception)
                 //{
-                    bimg = new ImageBrush(new BitmapImage(new Uri("http://titar.ir/contents/thumbnail/" + (MaterialDesign.App.Current as MaterialDesign.App).SearchResult[index].thumbnail.ToString())));
+                bimg = new ImageBrush(new BitmapImage(new Uri("http://titar.ir/contents/thumbnail/" + (MaterialDesign.App.Current as MaterialDesign.App).SearchResult[index]["thumbnail"].ToString())));
                 //} 
                 CustomButton card1 = new CustomButton();
-                card1.Answer = (MaterialDesign.App.Current as MaterialDesign.App).SearchResult[index].id.ToString();
-                card1.type = (MaterialDesign.App.Current as MaterialDesign.App).SearchResult[index].type.ToString();
+                card1.Answer = (MaterialDesign.App.Current as MaterialDesign.App).SearchResult[index]["id"].ToString();
+                card1.type = (MaterialDesign.App.Current as MaterialDesign.App).SearchResult[index]["type"].ToString();
                 card1.Width = 300;
                 card1.Height = 300;
                 card1.MouseLeftButtonUp += move_to_detail;
@@ -118,7 +118,7 @@ namespace MaterialDesign2.Pages
                 /// title
                 TextBlock Title = new TextBlock();
                 Title.FontSize = 15;
-                Title.Text = (MaterialDesign.App.Current as MaterialDesign.App).SearchResult[index].title;
+                Title.Text = (MaterialDesign.App.Current as MaterialDesign.App).SearchResult[index]["title"].ToString();
                 Title.Style = (Style)FindResource("MaterialDesignTitleTextBlock");
                 Title.Foreground = Brushes.White;
                 Title.TextAlignment = TextAlignment.Center;
@@ -126,7 +126,7 @@ namespace MaterialDesign2.Pages
 
                 TextBlock Author = new TextBlock();
                 Author.FontSize = 10;
-                Author.Text = "ناشر : " + (MaterialDesign.App.Current as MaterialDesign.App).SearchResult[index].author["name"];
+                Author.Text = "ناشر : " + (MaterialDesign.App.Current as MaterialDesign.App).SearchResult[index]["author"]["name"].ToString() ;
                 Author.Foreground = Brushes.White;
                 Author.HorizontalAlignment = HorizontalAlignment.Right;
                 Author.VerticalAlignment = VerticalAlignment.Bottom;
@@ -136,18 +136,21 @@ namespace MaterialDesign2.Pages
 
                 TextBlock Seen_Count = new TextBlock();
                 Seen_Count.FontSize = 10;
-                Seen_Count.Text = "بازدید : " + (MaterialDesign.App.Current as MaterialDesign.App).SearchResult[index].seen_count;
+                Seen_Count.Text = "بازدید : " + (MaterialDesign.App.Current as MaterialDesign.App).SearchResult[index]["seen_count"];
                 Seen_Count.Foreground = Brushes.White;
                 Seen_Count.HorizontalAlignment = HorizontalAlignment.Left;
                 Seen_Count.VerticalAlignment = VerticalAlignment.Bottom;
                 Seen_Count.Margin = new Thickness(5, 5, 5, 5);
                 temp.Children.Add(Seen_Count);
                 card1.Content = temp;
-
-                listview.Items.Add(new Tile()
-                {
-                    Name = card1,
-                });
+                
+               
+                Dispatcher.Invoke(new Action(() => {
+                    listview.Items.Add(new Tile()
+                    {
+                        Name = card1,
+                    });
+                }), DispatcherPriority.ContextIdle, null);
 
                 index++;
             }
@@ -165,7 +168,6 @@ namespace MaterialDesign2.Pages
                 {
                     elementName = mouseWasDownOn.Answer;
                 }
-                (MaterialDesign.App.Current as MaterialDesign.App).Recive_Content.number_of_try = 0;
 
                 if ((MaterialDesign.App.Current as MaterialDesign.App).Internet_connect.IsNetworkAvailable() == true)
                 {

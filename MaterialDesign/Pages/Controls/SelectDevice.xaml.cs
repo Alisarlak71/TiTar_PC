@@ -31,14 +31,14 @@ namespace MaterialDesign2.Pages.Controls
         {
             InitializeComponent();
         }
-        public MaterialDesign2.Classes.Content SelectedItem= new MaterialDesign2.Classes.Content();
+        public Newtonsoft.Json.Linq.JToken SelectedItem;
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             MaterialDesign2.Pages.Controls.ImagePlayer player = new MaterialDesign2.Pages.Controls.ImagePlayer();
            
                 if (htc.IsChecked == true)
                 {
-                    String counter = "http://titar.ir/contents/video/" + SelectedItem.file_name;
+                    String counter = "http://titar.ir/contents/video/" + SelectedItem["content"]["file_name"];
                     
                     System.Diagnostics.Process pProcess = new System.Diagnostics.Process();
                     pProcess.StartInfo.FileName = @"Player\ViveTitarPlayer.exe";
@@ -59,7 +59,7 @@ namespace MaterialDesign2.Pages.Controls
                 //    BorderBrush = Brushes.BlueViolet,
                 //};
                 //m.Show();   
-                String counter = "http://titar.ir/contents/video/" + SelectedItem.file_name;
+                String counter = "http://titar.ir/contents/video/" + SelectedItem["content"]["file_name"];
 
                 System.Diagnostics.Process pProcess = new System.Diagnostics.Process();
                 pProcess.StartInfo.FileName = @"Player\ViveTitarPlayer.exe";
@@ -69,7 +69,7 @@ namespace MaterialDesign2.Pages.Controls
                 else
                 {
                     player.typeContent = "video";
-                    player.url = "http://titar.ir/contents/video/" + SelectedItem.file_name;
+                    player.url = "http://titar.ir/contents/video/" + SelectedItem["content"]["file_name"];
                     player.Show();
                 }
                 this.Close();

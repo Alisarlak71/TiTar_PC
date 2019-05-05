@@ -21,6 +21,7 @@ using System.IO;
 using System.Net;
 using System.Threading;
 using System.Windows.Threading;
+using Newtonsoft.Json.Linq;
 
 namespace MaterialDesign2.Pages
 {
@@ -68,9 +69,12 @@ namespace MaterialDesign2.Pages
                              {
                                  if (content_type == "mychannel")
                                  {
-                                     MaterialDesign2.Classes.Channels channels = new MaterialDesign2.Classes.Channels();
-                                     List<MaterialDesign2.Classes.Content> channel_contents = new List<MaterialDesign2.Classes.Content>();
-                                     channel_contents = channels.get_channel_contents(channel_id);
+                                     JToken Channel_contents;
+                                     (MaterialDesign.App.Current as MaterialDesign.App).Recive_Content1.url = "http://titar.ir/api/pc/channels/" + (MaterialDesign.App.Current as MaterialDesign.App).User.id;
+                                     (MaterialDesign.App.Current as MaterialDesign.App).Recive_Content1.get_connection();
+
+                                     Channel_contents = (MaterialDesign.App.Current as MaterialDesign.App).Recive_Content1.response_content;
+
                                      Dispatcher.BeginInvoke(
                                    (Action)(() =>
                                    {
@@ -79,10 +83,10 @@ namespace MaterialDesign2.Pages
                                                TextBlock Title = new TextBlock();
                                                Title.Foreground = Brushes.White;
                                                Title.Margin = new Thickness(5);
-                                               if (channel_contents.Count>0)
+                                               if (Channel_contents.Count()>0)
                                                {
-                                                   Title.Text = channel_contents[0].channel["name"].ToString();
-                                                   Addtolist2(channel_contents);
+                                                   Title.Text = Channel_contents[0]["channel"]["name"].ToString();
+                                                   Addtolist2(Channel_contents);
                                                }
                                                else
                                                {
@@ -96,9 +100,10 @@ namespace MaterialDesign2.Pages
                                  }
                                  else if(content_type == "channel")
                                  {
-                                     MaterialDesign2.Classes.Channels channels = new MaterialDesign2.Classes.Channels();
-                                     List<MaterialDesign2.Classes.Content> Channel_contents = new List<MaterialDesign2.Classes.Content>();
-                                     Channel_contents = channels.get_channel_contents(channel_id);
+                                     JToken Channel_contents;
+                                     (MaterialDesign.App.Current as MaterialDesign.App).Recive_Content1.url = "http://titar.ir/api/pc/channel/" + channel_id;
+                                     (MaterialDesign.App.Current as MaterialDesign.App).Recive_Content1.get_connection(); 
+                                     Channel_contents = (MaterialDesign.App.Current as MaterialDesign.App).Recive_Content1.response_content;
                                      Dispatcher.BeginInvoke(
                                    (Action)(() =>
                                    {
@@ -111,7 +116,7 @@ namespace MaterialDesign2.Pages
                                                if (Channel_contents!=null)
                                                {
                                                    Detials_Content.Children.Clear();
-                                                   Title.Text = Channel_contents[0].channel["name"].ToString();
+                                                   Title.Text = Channel_contents["channel"]["name"].ToString();
                                                    Detials_Content.Children.Add(Title);
                                                    var color = new BrushConverter();
                                                    follow.Width = 80;
@@ -123,7 +128,7 @@ namespace MaterialDesign2.Pages
                                                    follow.Padding = new Thickness(5);
                                                    follow.id = channel_id;
                                                    Detials_Content.Children.Add(follow);
-                                                   Addtolist2(Channel_contents);
+                                                   Addtolist2(Channel_contents["contents"]);
                                                }
                                                else
                                                {
@@ -137,9 +142,12 @@ namespace MaterialDesign2.Pages
                                  else if(content_type == "user")
                                  {
                                      MaterialDesign2.Classes.Users user = new MaterialDesign2.Classes.Users();
-                                     List<MaterialDesign2.Classes.Content> User_contents = new List<MaterialDesign2.Classes.Content>();
-                                     User_contents = user.get_user_contents(user_id);
-                                     int followed_int = user.check_follow((MaterialDesign.App.Current as MaterialDesign.App).User.id,User_contents[0].author_id);
+                                     JToken User_contents;
+                                     (MaterialDesign.App.Current as MaterialDesign.App).Recive_Content1.url = "http://titar.ir/api/pc/user_contents/" + user_id;
+                                     (MaterialDesign.App.Current as MaterialDesign.App).Recive_Content1.get_connection();
+                                     
+                                     User_contents = (MaterialDesign.App.Current as MaterialDesign.App).Recive_Content1.response_content;
+                                     int followed_int = user.check_follow((MaterialDesign.App.Current as MaterialDesign.App).User.id,User_contents["contents"][0]["id"].ToString());
 
                                      Dispatcher.BeginInvoke(
                                    (Action)(() =>
@@ -154,8 +162,8 @@ namespace MaterialDesign2.Pages
                                        {
 
                                            Detials_Content.Children.Clear();
-                                           Addtolist2(User_contents);
-                                           Title.Text = User_contents[0].author["name"].ToString();
+                                           Addtolist2(User_contents["contents"]);
+                                           Title.Text = User_contents["contents"][0]["author"]["name"].ToString();
                                            Detials_Content.Children.Add(Title);
                                            var color = new BrushConverter();
                                            follow.Width = 80;
@@ -188,7 +196,7 @@ namespace MaterialDesign2.Pages
                                  else
                                  {
                                      /// recive data 
-                                     (MaterialDesign.App.Current as MaterialDesign.App).Recive_Content.recive_content(content_type, ctype);
+                                     
                                      /// end recive
                                      Dispatcher.BeginInvoke(
                                        (Action)(() =>
@@ -199,26 +207,32 @@ namespace MaterialDesign2.Pages
                                                    {
                                                        case "most_seen":
                                                            {
-                                                               if ((MaterialDesign.App.Current as MaterialDesign.App).MostSeen!=null)
-                                                                    Addtolist2((MaterialDesign.App.Current as MaterialDesign.App).MostSeen);
-                                                           }
-                                                           break;
+                                                       (MaterialDesign.App.Current as MaterialDesign.App).Recive_Content1.url = "http://titar.ir/api/pc/contents/2/" + ctype;
+                                                       (MaterialDesign.App.Current as MaterialDesign.App).Recive_Content1.get_connection();
+                                                       Addtolist2((MaterialDesign.App.Current as MaterialDesign.App).Recive_Content1.response_content["contents"]);
+                                                      
+                                                   }
+                                                   break;
                                                        case "last_video":
-                                                           if ((MaterialDesign.App.Current as MaterialDesign.App).LasteContent != null)
-                                                           Addtolist2((MaterialDesign.App.Current as MaterialDesign.App).LasteContent);
-                                                           break;
+                                                   (MaterialDesign.App.Current as MaterialDesign.App).Recive_Content1.url = "http://titar.ir/api/pc/contents/1/" + ctype;
+                                                   (MaterialDesign.App.Current as MaterialDesign.App).Recive_Content1.get_connection();
+                                                   Addtolist2((MaterialDesign.App.Current as MaterialDesign.App).Recive_Content1.response_content["contents"]);
+                                                   break;
                                                        case "most_down":
-                                                           if ((MaterialDesign.App.Current as MaterialDesign.App).MostDown != null)
-                                                           Addtolist2((MaterialDesign.App.Current as MaterialDesign.App).MostDown);
-                                                           break;
+                                                   (MaterialDesign.App.Current as MaterialDesign.App).Recive_Content1.url = "http://titar.ir/api/pc/contents/3/" + ctype;
+                                                   (MaterialDesign.App.Current as MaterialDesign.App).Recive_Content1.get_connection();
+                                                   Addtolist2((MaterialDesign.App.Current as MaterialDesign.App).Recive_Content1.response_content["contents"]);
+                                                   break;
                                                        case "most_love":
-                                                           if ((MaterialDesign.App.Current as MaterialDesign.App).MostLove != null)
-                                                           Addtolist2((MaterialDesign.App.Current as MaterialDesign.App).MostLove);
-                                                           break;
+                                                   (MaterialDesign.App.Current as MaterialDesign.App).Recive_Content1.url = "http://titar.ir/api/pc/contents/4/" + ctype;
+                                                   (MaterialDesign.App.Current as MaterialDesign.App).Recive_Content1.get_connection();
+                                                   Addtolist2((MaterialDesign.App.Current as MaterialDesign.App).Recive_Content1.response_content["contents"]);
+                                                   break;
                                                        case "most_sell":
-                                                           if ((MaterialDesign.App.Current as MaterialDesign.App).MostSell != null)
-                                                           Addtolist2((MaterialDesign.App.Current as MaterialDesign.App).MostSell);
-                                                           break;
+                                                   (MaterialDesign.App.Current as MaterialDesign.App).Recive_Content1.url = "http://titar.ir/api/pc/contents/5/" + ctype;
+                                                   (MaterialDesign.App.Current as MaterialDesign.App).Recive_Content1.get_connection();
+                                                   Addtolist2((MaterialDesign.App.Current as MaterialDesign.App).Recive_Content1.response_content["contents"]);
+                                                   break;
                                                    }
                                              
 
@@ -231,23 +245,25 @@ namespace MaterialDesign2.Pages
             
         }
         int index_to_show = 0;
-        public List<MaterialDesign2.Classes.Content> content = new List<MaterialDesign2.Classes.Content>();
+        public JToken content ;
         
-        private void Addtolist2(List<MaterialDesign2.Classes.Content> Content1)
+        private void Addtolist2(JToken Content1)
         {
             content = Content1;
            // listview.Items.Clear();
             int x = 0;// content.Count;
-            if (Content1.Count - index_to_show >= 10)
+           int t= Content1.Count();
+            if (Content1.Count() - index_to_show >= 10)
             {
                 x = (10 + index_to_show);
             }
             else
             {
-                x = Content1.Count;
+                x = Content1.Count();
             }
             while (index_to_show < x)
             {
+
                 BitmapImage bitmap = new BitmapImage();
                 ImageBrush bimg;
                 //try
@@ -263,12 +279,12 @@ namespace MaterialDesign2.Pages
                 //}
                 //catch (Exception)
                 //{
-                bimg = new ImageBrush(new BitmapImage(new Uri("http://titar.ir/contents/thumbnail/" + Content1[index_to_show].thumbnail)));
+                bimg = new ImageBrush(new BitmapImage(new Uri("http://titar.ir/contents/thumbnail/" + Content1[index_to_show]["thumbnail"])));
                 //} 
 
                 CustomButton card1 = new CustomButton();
-                card1.id = Content1[index_to_show].id.ToString();
-                card1.type = Content1[index_to_show].type.ToString();
+                card1.id = Content1[index_to_show]["id"].ToString();
+                card1.type = Content1[index_to_show]["type"].ToString();
                 card1.Width = 300;
                 card1.Height = 300;
                 card1.MouseLeftButtonUp += move_to_detail;
@@ -291,7 +307,7 @@ namespace MaterialDesign2.Pages
                 /// title
                 TextBlock Title = new TextBlock();
                 Title.FontSize = 15;
-                Title.Text = Content1[index_to_show].title;
+                Title.Text = Content1[index_to_show]["title"].ToString();
                 Title.Style = (Style)FindResource("MaterialDesignTitleTextBlock");
                 Title.Foreground = Brushes.White;
                 Title.TextAlignment = TextAlignment.Center;
@@ -299,7 +315,7 @@ namespace MaterialDesign2.Pages
 
                 TextBlock Author = new TextBlock();
                 Author.FontSize = 10;
-                Author.Text = "ناشر : " + Content1[index_to_show].author["name"];
+                //Author.Text = "ناشر : " + Content1[index_to_show]["author"]["name"].ToString();
                 Author.Foreground = Brushes.White;
                 Author.HorizontalAlignment = HorizontalAlignment.Right;
                 Author.VerticalAlignment = VerticalAlignment.Bottom;
@@ -308,7 +324,7 @@ namespace MaterialDesign2.Pages
 
                 TextBlock Seen_Count = new TextBlock();
                 Seen_Count.FontSize = 10;
-                Seen_Count.Text = "بازدید : " + Content1[index_to_show].seen_count;
+                Seen_Count.Text = "بازدید : " + Content1[index_to_show]["seen_count"];
                 Seen_Count.Foreground = Brushes.White;
                 Seen_Count.HorizontalAlignment = HorizontalAlignment.Left;
                 Seen_Count.VerticalAlignment = VerticalAlignment.Bottom;
@@ -316,14 +332,17 @@ namespace MaterialDesign2.Pages
                 temp.Children.Add(Seen_Count);
 
                 card1.Content = temp;
-                listview.Items.Add(new Tile()
-                {
-                    Name = card1,
-                });
+                Dispatcher.Invoke(new Action(() => {
+                    listview.Items.Add(new Tile()
+                    {
+                        Name = card1,
+                    });
+                }), DispatcherPriority.ContextIdle, null);
+              
                 index_to_show++;
             }
 
-            if(index_to_show < Content1.Count)
+            if(index_to_show < Content1.Count())
             {
                 CustomButton reload_more= new CustomButton();
                 reload_more.Width = 300;

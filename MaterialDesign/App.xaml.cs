@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Threading;
 using System.Windows.Threading;
+using Newtonsoft.Json.Linq;
+
 namespace MaterialDesign
 {
     /// <summary>
@@ -15,20 +17,23 @@ namespace MaterialDesign
     public partial class App : Application
     {
         public string DeptName { get; set; }
-        public MaterialDesign2.Classes.InternetConnect Internet_connect = new MaterialDesign2.Classes.InternetConnect(); 
+        public MaterialDesign2.Classes.InternetConnect Internet_connect = new MaterialDesign2.Classes.InternetConnect();
 
         /// <summary>
         /// Recive Content from server
         /// </summary>
+        /// 
         public MaterialDesign2.Classes.ReciveContent Recive_Content = new MaterialDesign2.Classes.ReciveContent();
 
-        public List <MaterialDesign2.Classes.Content>LasteContent = new List<MaterialDesign2.Classes.Content>();
-        public List<MaterialDesign2.Classes.Content> MostSeen = new List<MaterialDesign2.Classes.Content>();
-        public List<MaterialDesign2.Classes.Content> MostLove = new List<MaterialDesign2.Classes.Content>();
-        public List<MaterialDesign2.Classes.Content> MostDown = new List<MaterialDesign2.Classes.Content>();
-        public List<MaterialDesign2.Classes.Content> MostSell = new List<MaterialDesign2.Classes.Content>();
+        public MaterialDesign2.Classes.Connection Recive_Content1 = new MaterialDesign2.Classes.Connection();
+
+        public JToken LasteContent;
+        public JToken MostSeen;
+        public JToken MostLove;
+        public JToken MostDown;
+        public JToken MostSell;
         //Searching 
-        public List<MaterialDesign2.Classes.Content> SearchResult = new List<MaterialDesign2.Classes.Content>();
+        public JToken SearchResult;
 
         /// <summary>
         /// log in 

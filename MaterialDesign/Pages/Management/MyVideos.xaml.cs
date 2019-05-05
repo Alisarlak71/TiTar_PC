@@ -157,7 +157,6 @@ namespace MaterialDesign2.Pages.Management
                     elementName = mouseWasDownOn.id;
                 }
               MaterialDesign1.Pages.DetialsPage1 details = new MaterialDesign1.Pages.DetialsPage1();
-                (MaterialDesign.App.Current as MaterialDesign.App).Recive_Content.number_of_try = 0;
 
                 if ((MaterialDesign.App.Current as MaterialDesign.App).Internet_connect.IsNetworkAvailable() == true)
                 {

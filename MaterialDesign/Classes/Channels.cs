@@ -218,14 +218,11 @@ namespace MaterialDesign2.Classes
                                             channels.Add(temp);
                                             i++;
                                         }
-
                                     }
                                 }
-
                             }
                         }
                     }
-                    
                     (MaterialDesign.App.Current as MaterialDesign.App).Internet_connect.Connected = true;
                 }
                 catch
@@ -413,7 +410,6 @@ namespace MaterialDesign2.Classes
             return 1;
         }
         
-
         public class Follow_channel
         {
             public string user_id;
